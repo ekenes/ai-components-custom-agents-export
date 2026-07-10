@@ -1,5 +1,5 @@
 {
-  "name": "service-area-explorer",
+  "name": "ai-components-custom-agents-export",
   "description": "Sample React template demonstrating how to create an agentic mapping application with tool calling capabilities using the AI utils in ArcGIS AI components (beta).",
   "private": true,
   "type": "module",

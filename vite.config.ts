@@ -6,7 +6,20 @@ export default defineConfig({
   server: {
     open: true,
   },
+  base: "/ai-components-custom-agents-export/",
   build: {
     outDir: "dist",
+    assetsDir: "assets",
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
   },
 });
