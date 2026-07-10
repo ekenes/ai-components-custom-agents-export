@@ -1,0 +1,2 @@
+import{a5 as p,a7 as n,a6 as u,f as d}from"./index-D_3mGFmj.js";import{p as $}from"./EditUnitIdentifiersResult-CO_H76yl.js";import"./utils-BCxrIX-_.js";import"./applyEditsUtils-MG2oQdtt.js";async function y(o,r,a){const t=p(o),e={...r.toJSON(),f:"json"},s=n({...t.query,...e}),f=u(s,{...a,method:"post",authMode:"no-prompt"}),i=`${t.path}/unitIdentifiers/reserve`,{data:m}=await d(i,f);return $.fromJSON(m)}export{y as reserve};
+//# sourceMappingURL=reserve-BIwRx2mG.js.map

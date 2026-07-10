@@ -1,0 +1,2 @@
+import{t as s,u as i,o as c}from"./operatorSimplifyOGC-CpN32tSD.js";import{gK as n,gL as a,gM as f}from"./index-D_3mGFmj.js";import"./OperatorSimplifyOGC-D_I3YYjO.js";function l(t){const e=n(t),r=e.getSpatialReference();return a(s(e.getGeometry(),r,!1),r)}function g(t){const[e,r]=f(t);return i(e,r,!1).map(o=>a(o,r))}function x(t){const e=n(t);return c(e.getGeometry(),e.getSpatialReference(),!1,null)}export{l as execute,g as executeMany,x as isSimple};
+//# sourceMappingURL=simplifyOperatorOGC-DdBM_53p.js.map

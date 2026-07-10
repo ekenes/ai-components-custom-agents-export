@@ -1,0 +1,2 @@
+import{gK as s,gL as r,hf as n,gM as u,c7 as i}from"./index-D_3mGFmj.js";import{execute as f,executeMany as m}from"./operatorIntersection-YRrZWrKq.js";function x(a,c){const t=s(a),e=t.getSpatialReference();return r(f(t.getGeometry(),n(c),e),e)}function y(a,c){const[t,e]=u(a);return m(t,n(c),e,7).map(o=>r(o,e)).filter(i)}export{x as execute,y as executeMany};
+//# sourceMappingURL=intersectionOperator-DcrpQiJ8.js.map

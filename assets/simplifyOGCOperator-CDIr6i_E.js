@@ -1,0 +1,2 @@
+import{o as c,t as i,u as m,s as p}from"./operatorSimplifyOGC-CpN32tSD.js";import{ed as t,eb as n,ee as a,ec as u}from"./index-D_3mGFmj.js";import"./OperatorSimplifyOGC-D_I3YYjO.js";function C(e){const s=n(e);return u(i(a(e),t(s),!1),s)}function M(e){const s=e.map(a),o=n(e);return m(s,t(o),!1).map(r=>u(r,o))}function b(e,s){return c(a(e),t(n(e)),s!=null,s??null)}const d=p();export{C as execute,M as executeMany,b as isSimple,d as supportsCurves};
+//# sourceMappingURL=simplifyOGCOperator-CDIr6i_E.js.map

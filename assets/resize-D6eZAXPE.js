@@ -1,0 +1,2 @@
+import{a5 as p,a7 as n,a6 as u,f as d}from"./index-D_3mGFmj.js";import{p as $}from"./EditUnitIdentifiersResult-CO_H76yl.js";import"./utils-BCxrIX-_.js";import"./applyEditsUtils-MG2oQdtt.js";async function z(o,a,r){const t=p(o),s={...a.toJSON(),f:"json"},e=n({...t.query,...s}),i=u(e,{...r,method:"post",authMode:"no-prompt"}),f=`${t.path}/unitIdentifiers/resize`,{data:m}=await d(f,i);return $.fromJSON(m)}export{z as resize};
+//# sourceMappingURL=resize-D6eZAXPE.js.map

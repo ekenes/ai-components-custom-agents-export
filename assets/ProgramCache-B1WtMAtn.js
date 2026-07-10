@@ -1,0 +1,2 @@
+import"./index-D_3mGFmj.js";import{a as h}from"./VertexArrayObject-DiegCexa.js";class p{constructor(t){this._rctx=t,this._store=new Map}dispose(){this._store.forEach(t=>t.dispose()),this._store.clear()}get(t,s,r,c){const e=t+s+JSON.stringify(Array.from(r.entries())),o=this._store.get(e);if(o)return o;const i=new h(this._rctx,t,s,r,c);return this._store.set(e,i),i}get test(){}}export{p as s};
+//# sourceMappingURL=ProgramCache-B1WtMAtn.js.map

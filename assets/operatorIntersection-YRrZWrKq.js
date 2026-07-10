@@ -1,0 +1,2 @@
+import{cB as o,cC as u}from"./index-D_3mGFmj.js";const n=new o;function f(e,t){return n.accelerateGeometry(e,t,1)}function l(e,t,r){return n.execute(e,t,r,null)}function m(e,t,r,c){const s=n.executeMany(new u(e),new u([t]),r,null,c);return Array.from(s)}function p(){return n.supportsCurves()}export{f as accelerateGeometry,l as execute,m as executeMany,p as supportsCurves};
+//# sourceMappingURL=operatorIntersection-YRrZWrKq.js.map

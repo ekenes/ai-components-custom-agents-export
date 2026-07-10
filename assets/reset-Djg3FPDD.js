@@ -1,0 +1,2 @@
+import{a5 as p,a7 as c,a6 as u,f as d}from"./index-D_3mGFmj.js";import{p as j}from"./EditUnitIdentifiersResult-CO_H76yl.js";import"./utils-BCxrIX-_.js";import"./applyEditsUtils-MG2oQdtt.js";async function J(a,o,r){const s=p(a),t=o.toJSON();o.objects&&(t.objects=JSON.stringify(t.objects));const e={...t,f:"json"},i=c({...s.query,...e}),f=u(i,{...r,method:"post",authMode:"no-prompt"}),m=`${s.path}/unitIdentifiers/reset`,{data:n}=await d(m,f);return j.fromJSON(n)}export{J as reset};
+//# sourceMappingURL=reset-Djg3FPDD.js.map

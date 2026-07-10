@@ -1,0 +1,2 @@
+import{a5 as n,a7 as c,a6 as e,f as u}from"./index-D_3mGFmj.js";import{p as d}from"./EditCircuitsResult-Bv6WQm6F.js";import"./utils-BCxrIX-_.js";import"./applyEditsUtils-MG2oQdtt.js";async function J(a,o,r){const t=n(a),p={...o.toJSON(),f:"json"},s=c({...t.query,...p}),i=e(s,{...r,method:"post",authMode:"no-prompt"}),m=`${t.path}/circuits/alter`,{data:f}=await u(m,i);return d.fromJSON(f)}export{J as alterCircuit};
+//# sourceMappingURL=alterCircuit-DX1SLxh9.js.map

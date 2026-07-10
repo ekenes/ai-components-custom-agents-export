@@ -1,0 +1,2 @@
+import{v as c,w as u,D as f}from"./operatorConvexHull-Bklg3T1y.js";import{gK as i,gL as r,gM as m,hf as g}from"./index-D_3mGFmj.js";function l(e){const t=i(e);return r(c(t.getGeometry()),t.getSpatialReference())}function v(e,t={}){const{merge:a=!1}=t,[n,o]=m(e);return u(n,a).map(s=>r(s,o))}function y(e){return f(g(e))}export{l as execute,v as executeMany,y as isConvex};
+//# sourceMappingURL=convexHullOperator-Cn1ALamK.js.map

@@ -1,0 +1,2 @@
+import{a5 as m,a7 as n,a6 as u,f as d}from"./index-D_3mGFmj.js";import{p as h}from"./EditCircuitsResult-Bv6WQm6F.js";import"./utils-BCxrIX-_.js";import"./applyEditsUtils-MG2oQdtt.js";async function S(r,t,s){const i=m(r),o=t.toJSON();t.circuits&&(o.circuits=JSON.stringify(t.circuits));const a={...o,f:"json"},c=n({...i.query,...a}),e=u(c,{...s,method:"post",authMode:"no-prompt"}),p=`${i.path}/circuits/delete`,{data:f}=await d(p,e);return h.fromJSON(f)}export{S as deleteCircuits};
+//# sourceMappingURL=deleteCircuits-ZXCbDCIu.js.map
