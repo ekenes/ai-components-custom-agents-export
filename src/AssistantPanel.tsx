@@ -7,6 +7,7 @@ import "@esri/calcite-components/components/calcite-card";
 import "@arcgis/ai-components/components/arcgis-assistant";
 import "@arcgis/ai-components/components/arcgis-assistant-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-navigation-agent";
+import "@arcgis/ai-components/components/arcgis-assistant-data-exploration-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-help-agent";
 
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
@@ -244,8 +245,9 @@ export function AssistantPanel({
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
           entryMessage="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
           suggestedPrompts={[
-            "Go to the Palm Springs convention center",
+            "Go to the San Diego convention center",
             "How far can I get in 10 minutes walking from the convention center?",
+            "Show transit stops that have service every 15 minutes or less",
           ]}
           log-enabled
           keep-suggested-prompts
@@ -261,6 +263,7 @@ export function AssistantPanel({
             });
           }}
         >
+          <arcgis-assistant-data-exploration-agent></arcgis-assistant-data-exploration-agent>
           <arcgis-assistant-navigation-agent></arcgis-assistant-navigation-agent>
           <arcgis-assistant-help-agent></arcgis-assistant-help-agent>
           <arcgis-assistant-agent
