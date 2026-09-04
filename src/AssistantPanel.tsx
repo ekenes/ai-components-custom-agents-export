@@ -245,8 +245,9 @@ export function AssistantPanel({
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
           entryMessage="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
           suggestedPrompts={[
-            "Go to the San Diego convention center",
-            "How far can I get in 10 minutes walking from the convention center?",
+            "Go to union station, los angeles",
+            "How far can I get in 10 minutes walking from this location?",
+            "Show stops within this area",
             "Show transit stops that have service every 15 minutes or less",
           ]}
           log-enabled

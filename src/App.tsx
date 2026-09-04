@@ -16,12 +16,17 @@ import WebMap from "@arcgis/core/WebMap";
 
 import { AssistantPanel } from "./AssistantPanel";
 
+import esriConfig from "@arcgis/core/config";
+esriConfig.portalUrl = "https://devext.arcgis.com";
+
 function App(): React.JSX.Element {
   const map = useMemo(
     () =>
       new WebMap({
         portalItem: {
-          id: "5dea2b521169451190cf8c3c8b1c0fc4",
+          // dev - bf216585a451481eba8418d581b0128d
+          // prod - 5dea2b521169451190cf8c3c8b1c0fc4
+          id: "bf216585a451481eba8418d581b0128d",
         },
       }),
     [],
