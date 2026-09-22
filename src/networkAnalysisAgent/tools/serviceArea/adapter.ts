@@ -2,7 +2,7 @@
 // using ArcGIS services.
 // The tool takes input parameters such as facility locations,
 // drive time cutoffs, travel mode, and travel direction,
-// and returns a response that includes the generated service area polygons.
+// and returns an identifier for the calculated service area.
 
 import {
   FunctionTool,
@@ -86,7 +86,7 @@ export const findServiceAreasTool = new FunctionTool<
 >({
   name: "findServiceAreas",
   description:
-    "Calculates service areas (drive time polygons) that represent the area that can be reached when driving or walking on a street network. The calculated area is based on travel time to or from one or more facilities or destinations.",
+    "Calculates service areas without changing the map. Returns a calculationId that must be passed to addServiceAreaFeatures.",
   inputSchema: findServiceAreasSchema,
   execute: findServiceAreasWrapper,
 });

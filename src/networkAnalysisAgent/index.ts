@@ -1,51 +1,53 @@
-import { LLMAgent } from "@arcgis/ai-components/agent-utils/LLMAgent.js";
-import { agentTools } from "./tools";
-import { createAgentMiddleware } from "@arcgis/ai-components/agent-utils/middlewares/middleware.js";
+import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/createSkillAgent.js";
 
-const prompt = String.raw`Provides tools for geospatial services and operations including finding facilities and optimized routes.
+const serviceAreaSkill = String.raw`---
+name: service-area
+description: Calculates areas reachable by driving or walking from known facilities or destinations.
+allowed-tools: findServiceAreas addServiceAreaFeatures
+---
 
-	**Available Tools:**
+# Service Area
 
-	- **findServiceAreas**: Calculates the area that can be reached when driving or walking on a street network. The calculated area is based on either time or distance to or from one or more facilities or destinations. Here are the coordinates of the facility: {coords}.
-
-		_Example queries:_
-			- "How far can I go by car in 15 minutes from Esri, Redlands, CA?"
-			- "Generate service areas for delivery trucks from our warehouse locations"
-
-		Do NOT ask about output format. Do NOT invent locations or coordinates for facilities if not known. Do NOT attempt to geocode locations without first using the Navigation agent. If you are unaware of an existing location, prompt the user to navigate to the location first.
-	`;
+- Use findServiceAreas to calculate the area reachable by driving or walking based on time or distance.
+- After findServiceAreas succeeds, use its calculationId with addServiceAreaFeatures to add the calculated polygons and facilities to the map.
+- Always complete both steps for a service area request. Do not claim the features were added until addServiceAreaFeatures succeeds.
+- Use the facility coordinates from the runtime context.
+- Do not ask about output format.
+- Do not invent facility locations or coordinates. If coordinates are unavailable, ask the user to navigate to the location first.
+`;
 
 const description = `You are a network analysis assistant that helps users perform geospatial network operations, such as calculating service areas, routes, and geocoding locations.`;
 
-const extractCoords = createAgentMiddleware<any>(
-  "extractCoords",
-  {
-    beforeAgent: (request) => {
-      console.log("Extract Coords Middleware - beforeAgent:", request);
-      const sharedState = request.state.agentExecutionContext?.sharedState as
-        | Record<string, { value?: { location?: { x?: number; y?: number } } }>
-        | undefined;
-      const location = sharedState?.lastResolvedLocation?.value?.location;
-      return {
-        coords: {
-          x: location?.x,
-          y: location?.y,
-        },
-      };
-    },
-  },
-  {
-    outputKey: "coords",
-  },
-);
+type SharedState = Record<
+  string,
+  { value?: { location?: { x?: number; y?: number } } }
+>;
 
-const networkAnalysisAgent = new LLMAgent({
+export const NetworkAnalysisAgent = createSkillAgent({
+  id: "networkAnalysis",
   name: "Network Analysis",
   description,
-  prompt,
-  middlewares: [extractCoords],
+  skillLoaders: [async () => serviceAreaSkill],
+  toolLoaders: {
+    findServiceAreas: async () =>
+      (await import("./tools/serviceArea")).findServiceAreasTool.getTool(),
+    addServiceAreaFeatures: async () =>
+      (
+        await import("./tools/addServiceAreaFeatures")
+      ).addServiceAreaFeaturesTool.getTool(),
+  },
   modelTier: "fast",
-  tools: agentTools,
-});
+  systemPrompt: "You are an ArcGIS network analysis agent.",
+  runtimeContextLoader: ({ config }) => {
+    const sharedState = config?.configurable?.agentExecutionContext
+      ?.sharedState as SharedState | undefined;
+    const location = sharedState?.lastResolvedLocation?.value?.location;
 
-export const NetworkAnalysisAgent = networkAnalysisAgent.registration;
+    return JSON.stringify({
+      facilityCoordinates: {
+        x: location?.x,
+        y: location?.y,
+      },
+    });
+  },
+});

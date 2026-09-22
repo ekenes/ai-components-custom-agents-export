@@ -1,21 +1,36 @@
-import { LLMAgent } from "@arcgis/ai-components/agent-utils/LLMAgent.js";
-import { agentTools } from "./tools";
+import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/createSkillAgent.js";
 
-const prompt = String.raw`You are an agent that exports the state of the user's map in one of the following ways:
+const exportSkill = String.raw`---
+name: map-export
+description: Exports the current map as a web map, PDF, or screenshot.
+allowed-tools: saveAsWebMap exportToPdf exportScreenshot
+---
 
-1. **Save a Web Map**: Save the current state of the map as a web map in ArcGIS Online. This includes the basemap, operational layers, and any graphics or features added to the map. The user will provide a title for the web map.
-2. **Export to PDF**: Export the current state of the map as a PDF file. This includes all features and graphics currently displayed on the map. The user will provide a filename for the exported PDF file.
-3. **Export screenshot**: Export the current state of the map as an image file (PNG or JPEG). This includes all features and graphics currently displayed on the map.
+# Map Export
+
+- Use saveAsWebMap to save the current map state as an ArcGIS Online web map.
+- Use exportToPdf to export the current map state as a PDF.
+- Use exportScreenshot to export the current map state as a PNG or JPEG image.
+- Use exactly the tool that matches the requested export format.
 `;
 
 const description = `You are an agent that exports the state of the user's map in one of the following ways: Save a Web Map, Export to PDF, or Export screenshot. You will use the appropriate tool based on the user's request and provide clear instructions for any required input.`;
 
-const mapExportAgent = new LLMAgent({
+export const MapExportAgent = createSkillAgent({
+  id: "mapExport",
   name: "Map Export Agent",
   description,
-  prompt,
+  skillLoaders: [async () => exportSkill],
+  toolLoaders: {
+    saveAsWebMap: async () =>
+      (await import("./tools/saveAsWebMap")).saveAsWebMapTool.getTool(),
+    exportToPdf: async () =>
+      (await import("./tools/exportToPdf/adapter")).exportToPdfTool.getTool(),
+    exportScreenshot: async () =>
+      (
+        await import("./tools/exportScreenshot/adapter")
+      ).exportScreenshotTool.getTool(),
+  },
   modelTier: "fast",
-  tools: agentTools,
+  systemPrompt: "You are an ArcGIS map export agent.",
 });
-
-export const MapExportAgent = mapExportAgent.registration;
