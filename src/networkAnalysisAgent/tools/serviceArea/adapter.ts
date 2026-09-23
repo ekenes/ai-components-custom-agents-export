@@ -4,16 +4,14 @@
 // drive time cutoffs, travel mode, and travel direction,
 // and returns an identifier for the calculated service area.
 
-import {
-  FunctionTool,
-  type FunctionToolExecute,
-} from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
+import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
+import { tool, type ToolRuntime } from "@langchain/core/tools";
 import z from "zod";
 import { findServiceAreas } from "./core";
 import { getNetworkAnalysisContext } from "../../context/";
 
 type FindServiceAreasInput = {
-  facilities: { x: number; y: number }[];
+  sharedResourceId: string;
   driveTimeCutoffs: number[];
   travelModeName:
     | "Walking Time"
@@ -25,36 +23,90 @@ type FindServiceAreasInput = {
   travelDirection: "from-facility" | "to-facility";
 };
 
-export const findServiceAreasWrapper: FunctionToolExecute<
-  FindServiceAreasInput,
-  string
-> = async (
-  { facilities, driveTimeCutoffs, travelModeName, travelDirection },
-  config,
-): Promise<string> => {
-  const { mapElement } = getNetworkAnalysisContext(config);
+type SharedResource = {
+  id?: unknown;
+  kind?: unknown;
+  description?: unknown;
+  payload?: unknown;
+};
 
-  return await findServiceAreas(
+type ServiceAreaToolState = {
+  agentExecutionContext?: {
+    sharedResources?: readonly SharedResource[];
+  };
+};
+
+const pointResourceSchema = z.object({
+  id: z.string(),
+  kind: z.literal("point"),
+  description: z.string(),
+  payload: z.object({
+    x: z.number(),
+    y: z.number(),
+  }),
+});
+
+export const findServiceAreasWrapper = async (
+  {
+    sharedResourceId,
+    driveTimeCutoffs,
+    travelModeName,
+    travelDirection,
+  }: FindServiceAreasInput,
+  runtime: ToolRuntime<ServiceAreaToolState>,
+): Promise<AgentToolResponse<{ calculationId: string }>> => {
+  const { mapElement } = getNetworkAnalysisContext(runtime);
+  const resource = runtime.state?.agentExecutionContext?.sharedResources?.find(
+    (candidate) => candidate.id === sharedResourceId,
+  );
+  if (!resource) {
+    throw new Error(`Shared resource not found: ${sharedResourceId}`);
+  }
+
+  const pointResource = pointResourceSchema.safeParse(resource);
+  if (!pointResource.success) {
+    throw new Error(
+      `Shared resource ${sharedResourceId} does not contain valid point geometry.`,
+    );
+  }
+
+  const result = await findServiceAreas(
     {
-      facilities,
+      facilities: [pointResource.data.payload],
       driveTimeCutoffs,
       travelModeName,
       travelDirection,
     },
     mapElement,
   );
+
+  return [
+    result.message,
+    {
+      value: { calculationId: result.calculationId },
+      sharedResourceAdditions: result.polygons.flatMap((graphic, index) => {
+        if (!graphic.geometry) {
+          return [];
+        }
+
+        const cutoff = driveTimeCutoffs[index % driveTimeCutoffs.length];
+        return [
+          {
+            kind: "polygon" as const,
+            description: `${cutoff ?? "Calculated"} minute ${travelModeName.toLowerCase()} service area from ${pointResource.data.description}`,
+            payload: graphic.geometry.toJSON(),
+          },
+        ];
+      }),
+    },
+  ];
 };
 
 export const findServiceAreasSchema = z.object({
-  facilities: z
-    .array(
-      z.object({
-        x: z.number().describe("Longitude coordinate (e.g., -118.2437)"),
-        y: z.number().describe("Latitude coordinate (e.g., 34.0522)"),
-      }),
-    )
+  sharedResourceId: z
+    .string()
     .describe(
-      "Array of facility locations with x (longitude) and y (latitude) coordinates.",
+      "Exact ID of a point returned by listSharedResources. Never invent an ID.",
     ),
   driveTimeCutoffs: z
     .array(z.number())
@@ -80,13 +132,10 @@ export const findServiceAreasSchema = z.object({
     ),
 });
 
-export const findServiceAreasTool = new FunctionTool<
-  FindServiceAreasInput,
-  string
->({
+export const findServiceAreasTool = tool(findServiceAreasWrapper, {
   name: "findServiceAreas",
   description:
-    "Calculates service areas without changing the map. Returns a calculationId that must be passed to addServiceAreaFeatures.",
-  inputSchema: findServiceAreasSchema,
-  execute: findServiceAreasWrapper,
+    "Calculates service areas from a point shared resource without changing the map. Returns a calculationId for addServiceAreaFeatures and publishes the resulting polygons as shared resources.",
+  schema: findServiceAreasSchema,
+  responseFormat: "content_and_artifact",
 });

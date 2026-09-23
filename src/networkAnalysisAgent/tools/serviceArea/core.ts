@@ -18,6 +18,12 @@ export type ServiceAreaCalculation = {
   travelModeName: FindServiceAreasOptions["travelModeName"];
 };
 
+export type ServiceAreaCalculationResult = {
+  calculationId: string;
+  message: string;
+  polygons: Graphic[];
+};
+
 const calculations = new Map<string, ServiceAreaCalculation>();
 
 export const getServiceAreaCalculation = (calculationId: string) =>
@@ -29,7 +35,7 @@ export const getServiceAreaCalculation = (calculationId: string) =>
 export const findServiceAreas = async (
   options: FindServiceAreasOptions,
   mapElement: ArcgisMap,
-): Promise<string> => {
+): Promise<ServiceAreaCalculationResult> => {
   const { facilities, driveTimeCutoffs, travelModeName, travelDirection } =
     options;
 
@@ -88,9 +94,9 @@ export const findServiceAreas = async (
     travelModeName,
   });
 
-  return JSON.stringify({
+  return {
     calculationId,
-    polygonCount: polygons.length,
-    message: "Service area calculated. Add its features to the map next.",
-  });
+    polygons,
+    message: `Calculated ${polygons.length} service area polygon(s). Add the features to the map next using calculationId ${calculationId}.`,
+  };
 };
