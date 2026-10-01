@@ -2,7 +2,6 @@ import {
   FunctionTool,
   type FunctionToolExecute,
 } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
-import z from "zod";
 import { exportScreenshot } from "./core";
 import { getExportAgentContext } from "../../context";
 import {
@@ -16,7 +15,7 @@ type ExportScreenshotInput = Record<string, never>;
 export const exportScreenshotWrapper: FunctionToolExecute<
   ExportScreenshotInput,
   string | null | undefined
-> = async ({}, config): Promise<string | undefined | null> => {
+> = async (_, config): Promise<string | undefined | null> => {
   const { mapElement } = getExportAgentContext(config);
   const hilFilename = getHumanInTheLoopPayload<string>(config);
   const filename = hilFilename?.trim() || "Untitled Map Screenshot";
@@ -39,10 +38,8 @@ export const exportScreenshotWrapper: FunctionToolExecute<
     config,
   );
 
-  return "Screenshot exported successfully.";
+  return `${filename} successfully exported.`;
 };
-
-const screenshotExportSchema = z.object({});
 
 const hilFilenameSubmit = createHumanInTheLoopToolMiddleware<
   ExportScreenshotInput,
@@ -60,8 +57,7 @@ export const exportScreenshotTool = new FunctionTool<
 >({
   name: "exportScreenshot",
   description: "Captures the current state of the map as an image screenshot.",
-  inputSchema: screenshotExportSchema,
   middlewares: [hilFilenameSubmit],
   execute: exportScreenshotWrapper,
-  resultMode: "terminal",
+  resultMode: "continue",
 });

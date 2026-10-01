@@ -83,7 +83,7 @@ export const findServiceAreasWrapper = async (
   return [
     result.message,
     {
-      value: { calculationId: result.calculationId },
+      value: { calculationId: result.calculationId }, // may not be needed
       sharedResourceAdditions: result.polygons.flatMap((graphic, index) => {
         if (!graphic.geometry) {
           return [];

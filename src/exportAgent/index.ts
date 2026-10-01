@@ -24,6 +24,6 @@ export const MapExportAgent = createSkillAgent({
   },
   modelTier: "fast",
   systemPrompt: "You are an ArcGIS map export agent.",
-  instructions:
-    "Use only the active skill and returned tool results to complete map export requests.",
+  // instructions:
+  //   "Use only the active skill and returned tool results to complete map export requests.",
 });

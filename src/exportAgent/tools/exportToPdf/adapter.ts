@@ -2,7 +2,6 @@ import {
   FunctionTool,
   type FunctionToolExecute,
 } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
-import z from "zod";
 import { exportToPdf } from "./core";
 import { getExportAgentContext } from "../../context";
 import {
@@ -16,7 +15,7 @@ type ExportToPdfInput = Record<string, never>;
 export const exportToPdfWrapper: FunctionToolExecute<
   ExportToPdfInput,
   string | null | undefined
-> = async ({}, config): Promise<string | undefined | null> => {
+> = async (_, config): Promise<string | undefined | null> => {
   const { mapElement } = getExportAgentContext(config);
   const hilFilename = getHumanInTheLoopPayload<string>(config);
   const filename = hilFilename?.trim() || "Untitled Map Export";
@@ -41,8 +40,6 @@ export const exportToPdfWrapper: FunctionToolExecute<
   return "PDF exported successfully.";
 };
 
-const pdfExportSchema = z.object({});
-
 const hilFilenameSubmit = createHumanInTheLoopToolMiddleware<
   ExportToPdfInput,
   string | null | undefined
@@ -59,8 +56,7 @@ export const exportToPdfTool = new FunctionTool<
 >({
   name: "exportToPdf",
   description: "Exports the current state of the map to a PDF file.",
-  inputSchema: pdfExportSchema,
   middlewares: [hilFilenameSubmit],
   execute: exportToPdfWrapper,
-  resultMode: "terminal",
+  resultMode: "continue",
 });

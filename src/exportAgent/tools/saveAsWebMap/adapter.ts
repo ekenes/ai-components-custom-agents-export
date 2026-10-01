@@ -2,7 +2,6 @@ import {
   FunctionTool,
   type FunctionToolExecute,
 } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
-import z from "zod";
 import { saveAsWebMap } from "./core";
 import { getExportAgentContext } from "../../context";
 import {
@@ -16,7 +15,7 @@ type SaveWebMapInput = Record<string, never>;
 export const saveAsWebMapWrapper: FunctionToolExecute<
   SaveWebMapInput,
   string | null | undefined
-> = async ({}, config): Promise<string | undefined | null> => {
+> = async (_, config): Promise<string | undefined | null> => {
   const { mapElement } = getExportAgentContext(config);
   const hilTitle = getHumanInTheLoopPayload<string>(config);
   const webMapTitle = hilTitle?.trim() || "Untitled Web Map";
@@ -50,8 +49,6 @@ export const saveAsWebMapWrapper: FunctionToolExecute<
   return `Web map exported successfully.`;
 };
 
-const webmapSchema = z.object({});
-
 const hilTitleSubmit = createHumanInTheLoopToolMiddleware<
   SaveWebMapInput,
   string | null | undefined
@@ -69,8 +66,7 @@ export const saveAsWebMapTool = new FunctionTool<
   name: "saveAsWebMap",
   description:
     "Saves the current state of the map as a new web map. Don't ask for a title.",
-  inputSchema: webmapSchema,
   middlewares: [hilTitleSubmit],
   execute: saveAsWebMapWrapper,
-  resultMode: "terminal",
+  resultMode: "continue",
 });
