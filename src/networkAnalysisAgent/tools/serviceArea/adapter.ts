@@ -9,6 +9,10 @@ import { tool, type ToolRuntime } from "@langchain/core/tools";
 import z from "zod";
 import { findServiceAreas } from "./core";
 import { getNetworkAnalysisContext } from "../../context/";
+import {
+  resolveSharedPointResource,
+  type SharedResourcesToolState,
+} from "../shared/pointResources";
 
 type FindServiceAreasInput = {
   sharedResourceId: string;
@@ -23,29 +27,6 @@ type FindServiceAreasInput = {
   travelDirection: "from-facility" | "to-facility";
 };
 
-type SharedResource = {
-  id?: unknown;
-  kind?: unknown;
-  description?: unknown;
-  payload?: unknown;
-};
-
-type ServiceAreaToolState = {
-  agentExecutionContext?: {
-    sharedResources?: readonly SharedResource[];
-  };
-};
-
-const pointResourceSchema = z.object({
-  id: z.string(),
-  kind: z.literal("point"),
-  description: z.string(),
-  payload: z.object({
-    x: z.number(),
-    y: z.number(),
-  }),
-});
-
 export const findServiceAreasWrapper = async (
   {
     sharedResourceId,
@@ -53,26 +34,17 @@ export const findServiceAreasWrapper = async (
     travelModeName,
     travelDirection,
   }: FindServiceAreasInput,
-  runtime: ToolRuntime<ServiceAreaToolState>,
+  runtime: ToolRuntime<SharedResourcesToolState>,
 ): Promise<AgentToolResponse<{ calculationId: string }>> => {
   const { mapElement } = getNetworkAnalysisContext(runtime);
-  const resource = runtime.state?.agentExecutionContext?.sharedResources?.find(
-    (candidate) => candidate.id === sharedResourceId,
+  const pointResource = resolveSharedPointResource(
+    sharedResourceId,
+    runtime.state?.agentExecutionContext?.sharedResources,
   );
-  if (!resource) {
-    throw new Error(`Shared resource not found: ${sharedResourceId}`);
-  }
-
-  const pointResource = pointResourceSchema.safeParse(resource);
-  if (!pointResource.success) {
-    throw new Error(
-      `Shared resource ${sharedResourceId} does not contain valid point geometry.`,
-    );
-  }
 
   const result = await findServiceAreas(
     {
-      facilities: [pointResource.data.payload],
+      facilities: [pointResource.payload],
       driveTimeCutoffs,
       travelModeName,
       travelDirection,
@@ -93,7 +65,7 @@ export const findServiceAreasWrapper = async (
         return [
           {
             kind: "polygon" as const,
-            description: `${cutoff ?? "Calculated"} minute ${travelModeName.toLowerCase()} service area from ${pointResource.data.description}`,
+            description: `${cutoff ?? "Calculated"} minute ${travelModeName.toLowerCase()} service area from ${pointResource.description}`,
             payload: graphic.geometry.toJSON(),
           },
         ];

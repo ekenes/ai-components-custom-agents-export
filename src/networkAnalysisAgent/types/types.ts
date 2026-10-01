@@ -3,6 +3,11 @@ import type SpatialReference from "@arcgis/core/geometry/SpatialReference";
 export interface FacilityPoint {
   x: number;
   y: number;
+  spatialReference?: {
+    wkid?: number;
+    latestWkid?: number;
+    wkt?: string;
+  };
 }
 
 export interface FindServiceAreasOptions {

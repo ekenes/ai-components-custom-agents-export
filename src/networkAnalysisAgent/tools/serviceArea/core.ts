@@ -60,7 +60,7 @@ export const findServiceAreas = async (
         geometry: new Point({
           x: facility.x,
           y: facility.y,
-          spatialReference: { wkid: 4326 },
+          spatialReference: facility.spatialReference ?? { wkid: 4326 },
         }),
         attributes: { source: "network-analysis-service-area" },
       }),

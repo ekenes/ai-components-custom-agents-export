@@ -2,10 +2,11 @@ import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/cre
 
 const skillLoaders = [
   async (): Promise<string> =>
-    (await import("./skills/serviceArea/SKILL.md?raw")).default,
+    (await import("./skills/networkAnalysis/SKILL.md?raw")).default,
 ] as const;
 
-const description = `You are a network analysis assistant that helps users perform geospatial network operations, such as calculating service areas, routes, and geocoding locations.`;
+const description =
+  "Calculates service areas and solves routes between shared locations, displays results on the map, and publishes reusable geometry.";
 
 export const NetworkAnalysisAgent = createSkillAgent({
   id: "networkAnalysis",
@@ -19,6 +20,7 @@ export const NetworkAnalysisAgent = createSkillAgent({
       (
         await import("./tools/addServiceAreaFeatures")
       ).addServiceAreaFeaturesTool.getTool(),
+    solveRoute: async () => (await import("./tools/route")).solveRouteTool,
   },
   modelTier: "fast",
   systemPrompt: "You are an ArcGIS network analysis agent.",
