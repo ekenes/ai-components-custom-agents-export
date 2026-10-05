@@ -1,3 +1,4 @@
+import { sendUXSuggestion } from "@arcgis/ai-components/agent-utils/index.js";
 import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
 import { tool, type ToolRuntime } from "@langchain/core/tools";
 import z from "zod";
@@ -41,16 +42,18 @@ export async function solveRouteWrapper(
     runtime.signal,
   );
 
+  await sendUXSuggestion(
+    { type: "directions", data: { layerId: result.layerId } },
+    runtime,
+  );
+
   return [
     JSON.stringify({
-      message: "Route solved and added to the map.",
+      message:
+        "Route solved and added to the map. Interactive directions are displayed in chat. Do not repeat turn-by-turn steps in text.",
       layerId: result.layerId,
       totalDistanceMeters: result.totalDistanceMeters,
       totalDurationMinutes: result.totalDurationMinutes,
-      directions: result.directions,
-      directionsMessage: result.directions.length
-        ? "Display each direction's text and distanceMeters in order as a numbered list in chat. If a step's distanceMeters is null, state that its distance is unavailable."
-        : "The route service returned no written directions for this route.",
     }),
     {
       value: { layerId: result.layerId },
@@ -68,7 +71,7 @@ export async function solveRouteWrapper(
 export const solveRouteTool = tool(solveRouteWrapper, {
   name: "solveRoute",
   description:
-    "Solves a route between shared point resources in the supplied order, updates a RouteLayer with the result, and adds it to the map. Returns written turn-by-turn directions for display in chat and publishes the route geometry as a shared polyline.",
+    "Solves a route between shared point resources in the supplied order, updates and adds a RouteLayer to the map, displays interactive directions in chat, and publishes route geometry as a shared polyline. Do not repeat turn-by-turn steps in text.",
   schema: solveRouteSchema,
   responseFormat: "content_and_artifact",
 });

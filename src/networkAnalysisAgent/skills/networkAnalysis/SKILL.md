@@ -1,7 +1,7 @@
 ---
 name: network-analysis
 description: Calculates service areas and solves routes between locations produced by earlier agents, then displays the results on the map.
-allowed-tools: findServiceAreas addServiceAreaFeatures solveRoute
+allowed-tools: findServiceAreas addServiceAreaFeatures solveRoute listSharedResources
 ---
 
 # Network Analysis
@@ -26,5 +26,5 @@ allowed-tools: findServiceAreas addServiceAreaFeatures solveRoute
 - Preserve the user's requested stop order. If the order is ambiguous, clarify it before solving.
 - `solveRoute` solves, updates, and adds the route layer to the map in one call; do not call `addServiceAreaFeatures` for a route.
 - Report the returned duration in minutes and distance in meters when available. Do not invent directions or travel metrics.
-- Always include the returned `directions` in the chat under a Directions heading as a numbered list, preserving each step's `text` and sequence. Include its `distanceMeters` in meters beside each step (including zero). If the distance is null, then don't include any text for it rather than guessing. Do not only report that the route was added to the map. If the directions array is empty, state that written directions are unavailable; do not fabricate steps.
+- `solveRoute` displays an interactive `arcgis-directions` component in chat with direction steps and distances. Do not write or repeat direction steps in the chat response. Give only a brief confirmation and returned route totals when available; let the component render the directions.
 - Calculated service-area polygons and route polylines are published as shared resources for other agents to reuse.
