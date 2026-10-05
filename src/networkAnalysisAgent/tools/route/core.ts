@@ -56,6 +56,15 @@ export async function solveRoute(
     ),
   });
 
+  if (/walking/i.test(travelModeName)) {
+    // remove to avoid solid line filling in gaps or for dashes to fill in gaps in directionLines
+    routeLayer.defaultSymbols.routeInfo = null;
+    const symbol = routeLayer.defaultSymbols.directionLines;
+    if (symbol?.type === "simple-line") {
+      symbol.style = "short-dot";
+    }
+  }
+
   const result = await routeLayer.solve(
     new RouteParameters({
       travelMode,
