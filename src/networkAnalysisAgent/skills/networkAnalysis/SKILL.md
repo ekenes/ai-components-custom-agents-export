@@ -1,7 +1,7 @@
 ---
 name: network-analysis
 description: Calculates service areas and solves routes between locations produced by earlier agents, then displays the results on the map.
-allowed-tools: findServiceAreas addServiceAreaFeatures solveRoute
+allowed-tools: listSharedResources findServiceAreas addServiceAreaFeatures solveRoute
 ---
 
 # Network Analysis

@@ -1,4 +1,4 @@
-import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/createSkillAgent.js";
+import { SkillAgent } from "@arcgis/ai-components/agent-utils/SkillAgent.js";
 
 const skillLoaders = [
   async (): Promise<string> =>
@@ -8,7 +8,7 @@ const skillLoaders = [
 const description =
   "Calculates service areas and solves routes between shared locations, displays results on the map, and publishes reusable geometry.";
 
-export const NetworkAnalysisAgent = createSkillAgent({
+export const NetworkAnalysisAgent = new SkillAgent({
   id: "networkAnalysis",
   name: "Network Analysis",
   description,

@@ -1,4 +1,4 @@
-import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/createSkillAgent.js";
+import { SkillAgent } from "@arcgis/ai-components/agent-utils/SkillAgent.js";
 
 const skillLoaders = [
   async (): Promise<string> =>
@@ -7,7 +7,7 @@ const skillLoaders = [
 
 const description = `You are an agent that exports the state of the user's map in one of the following ways: Save a Web Map, Export to PDF, or Export screenshot. You will use the appropriate tool based on the user's request and provide clear instructions for any required input.`;
 
-export const MapExportAgent = createSkillAgent({
+export const MapExportAgent = new SkillAgent({
   id: "mapExport",
   name: "Map Export Agent",
   description,

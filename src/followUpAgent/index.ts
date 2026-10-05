@@ -1,4 +1,4 @@
-import { createSkillAgent } from "@arcgis/ai-components/agents/runtime/skill/createSkillAgent.js";
+import { SkillAgent } from "@arcgis/ai-components/agent-utils/SkillAgent.js";
 import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
 import { tool, type ToolRuntime } from "@langchain/core/tools";
 import z from "zod";
@@ -26,7 +26,7 @@ const suggestFollowUps = tool(
   },
 );
 
-export const FollowUpAgent = createSkillAgent({
+export const FollowUpAgent = new SkillAgent({
   id: "followUps",
   name: "Follow-up Questions",
   description:
@@ -41,8 +41,6 @@ export const FollowUpAgent = createSkillAgent({
   runtimeContextLoader: ({ config }) =>
     JSON.stringify(config?.configurable?.followUpContext ?? {}),
 });
-
-const graph = FollowUpAgent.createGraph().compile();
 
 export type AgentCapability = { name: string; description: string };
 type ChatMessage = ReturnType<ArcgisAssistant["messages"]["toArray"]>[number];
@@ -60,7 +58,7 @@ export async function generateFollowUps(
     ...(message.role === "assistant" ? { error: message.error } : {}),
   }));
   try {
-    await graph.invoke(
+    await FollowUpAgent.run(
       {
         agentExecutionContext: {
           userRequest:
