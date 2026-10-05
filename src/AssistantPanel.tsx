@@ -247,8 +247,7 @@ export function AssistantPanel({
           suggestedPrompts={[
             "Go to the Frankfurt convention center",
             "How far can I get in 20 minutes walking from this location?",
-            "Show transit stops within this area that have service every 15 minutes or less",
-            "List them",
+            "Show transit stops within this area that have service every 3 minutes or less. List a few of them by name.",
             "Show me the fastest walking route to this location from the convention center",
           ]}
           log-enabled
