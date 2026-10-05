@@ -9,6 +9,7 @@ import "@arcgis/ai-components/components/arcgis-assistant-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-navigation-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-data-exploration-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-help-agent";
+import "@arcgis/map-components/components/arcgis-directions";
 
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
 import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
@@ -133,6 +134,28 @@ export function AssistantPanel({
       return;
     }
     const block = request.data.block;
+
+    if (block?.type === "directions") {
+      const layerId = block.data?.layerId;
+      if (typeof layerId !== "string" || !layerId) return null;
+      return (
+        <div
+          key={request.slotName}
+          slot={request.slotName}
+          className="route-directions"
+        >
+          <arcgis-directions
+            referenceElement="main-map"
+            mapLayerId={layerId}
+            unit="metric"
+            hideLayerDetails
+            hidePrintButton
+            hideSaveAsButton
+            hideSaveButton
+          />
+        </div>
+      );
+    }
 
     const blockData = block?.data as ExportWebMapButtonData;
     const { label, url, title, filename, thumbnailUrl } = blockData ?? {};
