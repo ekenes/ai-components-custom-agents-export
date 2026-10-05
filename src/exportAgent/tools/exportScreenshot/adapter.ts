@@ -56,7 +56,8 @@ export const exportScreenshotTool = new FunctionTool<
   string | null | undefined
 >({
   name: "exportScreenshot",
-  description: "Captures the current state of the map as an image screenshot.",
+  description:
+    "Captures the current state of the map as a PNG screenshot. Appends written directions and available distances for visible solved routes to the same downloadable image.",
   middlewares: [hilFilenameSubmit],
   execute: exportScreenshotWrapper,
   resultMode: "continue",
