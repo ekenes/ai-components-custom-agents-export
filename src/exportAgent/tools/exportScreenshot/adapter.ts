@@ -33,6 +33,7 @@ export const exportScreenshotWrapper: FunctionToolExecute<
         url: screenshotUrl,
         title: filename,
         filename,
+        thumbnailUrl: screenshotUrl,
       },
     },
     config,

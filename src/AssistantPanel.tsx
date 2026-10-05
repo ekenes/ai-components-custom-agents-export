@@ -158,13 +158,14 @@ export function AssistantPanel({
       ? suggestedFileName
       : `${suggestedFileName}.png`;
 
-    const highResThumbnailUrl = thumbnailUrl
-      ? `${thumbnailUrl}${thumbnailUrl.includes("?") ? "&" : "?"}w=1200`
-      : undefined;
+    const highResThumbnailUrl =
+      isWebMapExport && thumbnailUrl && !thumbnailUrl.startsWith("data:")
+        ? `${thumbnailUrl}${thumbnailUrl.includes("?") ? "&" : "?"}w=1200`
+        : (thumbnailUrl ?? (isScreenshotExport ? url : undefined));
 
-    if (isWebMapExport) {
+    if (isWebMapExport || isPdfExport || isScreenshotExport) {
       return (
-        <div slot={request.slotName}>
+        <div key={request.slotName} slot={request.slotName}>
           <calcite-card>
             {highResThumbnailUrl ? (
               <img
@@ -173,33 +174,68 @@ export function AssistantPanel({
                 alt={title ? `${title} thumbnail` : "Web map thumbnail"}
                 style={{
                   width: "100%",
-                  height: "100%",
+                  height: "220px",
                   objectFit: "cover",
+                  objectPosition: "top",
                 }}
               />
             ) : null}
-            <span slot="heading">{title || "Saved Web Map"}</span>
-            <span slot="description">Your web map has been saved.</span>
+            <span slot="heading">
+              {title ||
+                (isScreenshotExport
+                  ? "Map Screenshot"
+                  : isPdfExport
+                    ? "Map PDF"
+                    : "Saved Web Map")}
+            </span>
+            <span slot="description">
+              {isScreenshotExport
+                ? "Your map screenshot is ready to download."
+                : isPdfExport
+                  ? "Your map has been exported to PDF."
+                  : "Your web map has been saved."}
+            </span>
             <div slot="footer-end" style={{ display: "flex", gap: "0.5rem" }}>
               <calcite-button
                 icon-end="launch"
                 scale="s"
                 appearance="solid"
                 onClick={() => {
+                  if (isScreenshotExport) {
+                    void openScreenshotPreview(url, title);
+                    return;
+                  }
                   window.open(url, "_blank");
                 }}
               >
-                Open map
+                {isScreenshotExport
+                  ? "Open screenshot"
+                  : isPdfExport
+                    ? "Open PDF"
+                    : "Open map"}
               </calcite-button>
               <calcite-button
-                icon-end="link"
+                icon-end={isScreenshotExport ? "download-to" : "link"}
                 scale="s"
                 appearance="outline"
                 onClick={() => {
+                  if (isScreenshotExport) {
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.download = screenshotFileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                    return;
+                  }
                   navigator.clipboard.writeText(url);
                 }}
               >
-                Copy link
+                {isScreenshotExport
+                  ? "Download screenshot"
+                  : isPdfExport
+                    ? "Copy PDF link"
+                    : "Copy link"}
               </calcite-button>
             </div>
           </calcite-card>

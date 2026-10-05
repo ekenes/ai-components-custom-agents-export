@@ -25,6 +25,14 @@ export const exportToPdfWrapper: FunctionToolExecute<
     mapElement,
   });
 
+  // A preview is optional: its failure must not hide a successful PDF export.
+  let thumbnailUrl: string | undefined;
+  try {
+    thumbnailUrl = (await mapElement.takeScreenshot())?.dataUrl;
+  } catch (error) {
+    console.warn("Unable to capture PDF map preview:", error);
+  }
+
   await sendUXSuggestion(
     {
       type: "button",
@@ -32,6 +40,7 @@ export const exportToPdfWrapper: FunctionToolExecute<
         label: "Open PDF",
         url: pdfUrl,
         title: filename,
+        thumbnailUrl,
       },
     },
     config,
