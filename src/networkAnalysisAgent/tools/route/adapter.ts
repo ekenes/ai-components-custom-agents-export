@@ -1,4 +1,4 @@
-import { sendUXSuggestion } from "@arcgis/ai-components/agent-utils/index.js";
+import { sendUXSuggestion } from "@arcgis/ai-components/utils/index.js";
 import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
 import { tool, type ToolRuntime } from "@langchain/core/tools";
 import z from "zod";
