@@ -73,6 +73,7 @@ export async function solveRoute(
   }
 
   map.add(routeLayer);
+  mapElement.goTo(routeLayer.routeInfo.geometry!);
 
   return {
     layerId: routeLayer.id,
