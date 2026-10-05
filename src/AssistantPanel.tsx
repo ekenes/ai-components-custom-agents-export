@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import "@esri/calcite-components/components/calcite-panel";
 import "@esri/calcite-components/components/calcite-shell-panel";
@@ -11,9 +11,29 @@ import "@arcgis/ai-components/components/arcgis-assistant-data-exploration-agent
 import "@arcgis/ai-components/components/arcgis-assistant-help-agent";
 
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
+import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
 import type { UXSuggestion } from "@arcgis/ai-components/utils/index.js";
 import { NetworkAnalysisAgent } from "./networkAnalysisAgent";
 import { MapExportAgent } from "./exportAgent";
+import { generateFollowUps } from "./followUpAgent";
+
+const availableAgents = [
+  {
+    name: "Navigation",
+    description: "Find locations and navigate to places or map features.",
+  },
+  {
+    name: "Data Exploration",
+    description:
+      "Query, filter, summarize, and analyze data in available map layers.",
+  },
+  { name: "Help", description: "Explain ArcGIS functionality and workflows." },
+  {
+    name: NetworkAnalysisAgent.name,
+    description: NetworkAnalysisAgent.description,
+  },
+  { name: MapExportAgent.name, description: MapExportAgent.description },
+];
 
 type ExportWebMapButtonData = {
   label?: string;
@@ -56,6 +76,16 @@ type AssistantPanelProps = {
 export function AssistantPanel({
   mapElementRef,
 }: AssistantPanelProps): React.JSX.Element {
+  const assistantRef = useRef<ArcgisAssistant | null>(null);
+  const processedResponses = useRef(new Set<string>());
+  const followUpRuns = useRef(new Map<string, AbortController>());
+  useEffect(
+    () => () => {
+      followUpRuns.current.forEach((controller) => controller.abort());
+      followUpRuns.current.clear();
+    },
+    [],
+  );
   const [slottableRequests, setSlottableRequests] = useState<
     AssistantSlottableRequestDetail[]
   >([]);
@@ -240,6 +270,51 @@ export function AssistantPanel({
     <calcite-shell-panel slot="panel-end" width="l" id="assistant-panel">
       <calcite-panel>
         <arcgis-assistant
+          ref={assistantRef}
+          onarcgisResponse={async ({ detail }) => {
+            const assistant = assistantRef.current;
+            if (
+              !assistant ||
+              detail.isStreaming ||
+              processedResponses.current.has(detail.id)
+            ) {
+              return;
+            }
+            // Mark before invocation/replacement to avoid recursive follow-up runs.
+            processedResponses.current.add(detail.id);
+            const controller = new AbortController();
+            followUpRuns.current.set(detail.id, controller);
+            const responseIndex = assistant.messages.findIndex(
+              (message) => message.id === detail.id,
+            );
+            try {
+              const prompts = await generateFollowUps(
+                assistant.messages.toArray().slice(0, responseIndex + 1),
+                availableAgents,
+                controller.signal,
+              );
+              if (controller.signal.aborted || !prompts.length) return;
+              const index = assistant.messages.findIndex(
+                (message) => message.id === detail.id,
+              );
+              const message = assistant.messages.at(index);
+              if (index < 0 || message?.role !== "assistant") return;
+              assistant.messages.splice(index, 1, {
+                ...message,
+                blocks: [
+                  ...(message.blocks ?? []).filter(
+                    (block) => block.type !== "suggested-prompts",
+                  ),
+                  { type: "suggested-prompts", data: { prompts } },
+                ],
+              });
+            } catch (error) {
+              if (!controller.signal.aborted)
+                console.warn("Follow-up suggestions unavailable:", error);
+            } finally {
+              followUpRuns.current.delete(detail.id);
+            }
+          }}
           reference-element="#main-map"
           heading="Walk and drive times"
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
