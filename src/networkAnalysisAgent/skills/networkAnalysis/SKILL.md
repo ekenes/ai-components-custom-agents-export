@@ -26,4 +26,5 @@ allowed-tools: findServiceAreas addServiceAreaFeatures solveRoute
 - Preserve the user's requested stop order. If the order is ambiguous, clarify it before solving.
 - `solveRoute` solves, updates, and adds the route layer to the map in one call; do not call `addServiceAreaFeatures` for a route.
 - Report the returned duration in minutes and distance in meters when available. Do not invent directions or travel metrics.
+- Always include the returned `directions` in the chat under a Directions heading as a numbered list, preserving each step's `text` and sequence. Include its `distanceMeters` in meters beside each step (including zero). If the distance is null, label it as unavailable rather than guessing. Do not only report that the route was added to the map. If the directions array is empty, state that written directions are unavailable; do not fabricate steps.
 - Calculated service-area polygons and route polylines are published as shared resources for other agents to reuse.

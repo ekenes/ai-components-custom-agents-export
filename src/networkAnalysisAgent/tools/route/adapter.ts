@@ -34,7 +34,12 @@ export async function solveRouteWrapper(
   const stops = sharedResourceIds.map((id) =>
     resolveSharedPointResource(id, resources),
   );
-  const result = await solveRoute(stops, travelModeName, mapElement, runtime.signal);
+  const result = await solveRoute(
+    stops,
+    travelModeName,
+    mapElement,
+    runtime.signal,
+  );
 
   return [
     JSON.stringify({
@@ -42,6 +47,10 @@ export async function solveRouteWrapper(
       layerId: result.layerId,
       totalDistanceMeters: result.totalDistanceMeters,
       totalDurationMinutes: result.totalDurationMinutes,
+      directions: result.directions,
+      directionsMessage: result.directions.length
+        ? "Display each direction's text and distanceMeters in order as a numbered list in chat. If a step's distanceMeters is null, state that its distance is unavailable."
+        : "The route service returned no written directions for this route.",
     }),
     {
       value: { layerId: result.layerId },
@@ -59,7 +68,7 @@ export async function solveRouteWrapper(
 export const solveRouteTool = tool(solveRouteWrapper, {
   name: "solveRoute",
   description:
-    "Solves a route between shared point resources in the supplied order, updates a RouteLayer with the result, and adds it to the map. Publishes the route geometry as a shared polyline.",
+    "Solves a route between shared point resources in the supplied order, updates a RouteLayer with the result, and adds it to the map. Returns written turn-by-turn directions for display in chat and publishes the route geometry as a shared polyline.",
   schema: solveRouteSchema,
   responseFormat: "content_and_artifact",
 });

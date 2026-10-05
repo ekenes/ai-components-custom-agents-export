@@ -75,11 +75,44 @@ export async function solveRoute(
   map.add(routeLayer);
   mapElement.goTo(routeLayer.routeInfo.geometry!);
 
+  const distancesByPointId = new Map<number, number>();
+  for (const line of routeLayer.directionLines?.toArray() ?? []) {
+    const pointId: unknown = line.toGraphic().attributes?.DirectionPointID;
+    const distance = line.distance;
+    if (
+      typeof pointId === "number" &&
+      typeof distance === "number" &&
+      Number.isFinite(distance) &&
+      distance >= 0
+    ) {
+      distancesByPointId.set(
+        pointId,
+        (distancesByPointId.get(pointId) ?? 0) + distance,
+      );
+    }
+  }
+
+  const directions = (routeLayer.directionPoints?.toArray() ?? [])
+    .map((point, index) => {
+      const pointId: unknown = point.toGraphic().attributes?.ObjectID;
+      return {
+        sequence: point.sequence ?? index + 1,
+        text: point.displayText?.trim() ?? "",
+        distanceMeters:
+          typeof pointId === "number"
+            ? (distancesByPointId.get(pointId) ?? null)
+            : null,
+      };
+    })
+    .filter((direction) => direction.text.length > 0)
+    .sort((a, b) => a.sequence - b.sequence);
+
   return {
     layerId: routeLayer.id,
     description: `${travelModeName} route: ${stops.map((stop) => stop.description).join(" → ")}`,
     geometry: geometry.toJSON(),
     totalDistanceMeters: routeLayer.routeInfo?.totalDistance ?? null,
     totalDurationMinutes: routeLayer.routeInfo?.totalDuration ?? null,
+    directions,
   };
 }
