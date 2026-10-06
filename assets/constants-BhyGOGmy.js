@@ -1,0 +1,2 @@
+const e=.017453292519944444,o=3.14159265359/128,s=180/3.141592654,t=1,p=1.1,r=1,L=1e-5,a=.05,c=1e-30,f=4,g=7,m=0,n=3,u=0,v=2,w=2,x=3,z=0,A=3,B=16777216,C=1.1,D=16,E=128,F=1,G=0,H=1,I=2;export{u as A,v as B,w as C,x as D,z as E,A as F,B as G,C as H,D as I,E as J,F as K,G as L,H as M,I as N,e,L as f,a as g,c as m,o,t as p,p as r,r as s,s as t,f as u,g as v,m as w,n as z};
+//# sourceMappingURL=constants-BhyGOGmy.js.map

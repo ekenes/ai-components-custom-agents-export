@@ -1,0 +1,2 @@
+import{OperatorIntersects as s}from"./OperatorIntersects-CKVFsRn3.js";import{o as n,hG as c,hz as o}from"./index-B05090t7.js";const u=new s;function a(e,t){const r=c(e);return u.execute(r.getGeometry(),o(t),r.getSpatialReference(),null)}function x(e,t){return n("json.intersectsOperator","execute","intersectsExecute"),a(e,t)}export{x as execute,a as intersectsExecute};
+//# sourceMappingURL=intersectsOperator-DnTcpLnR.js.map

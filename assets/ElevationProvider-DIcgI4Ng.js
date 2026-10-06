@@ -1,0 +1,2 @@
+function i(t){return t.type==="point"}class s{constructor(e,r=null,n=0){this.array=e,this.spatialReference=r,this.offset=n}}function a(t){return"array"in t}function f(t,e,r="ground"){if(i(e))return t.getElevation(e.x,e.y,e.z||0,e.spatialReference,r);if(a(e)){let n=e.offset;return t.getElevation(e.array[n++],e.array[n++],e.array[n]||0,e.spatialReference??t.spatialReference,r)}return t.getElevation(e[0],e[1],e[2]||0,t.spatialReference,r)}export{a,f as b,s as r,i as t};
+//# sourceMappingURL=ElevationProvider-DIcgI4Ng.js.map
