@@ -1,0 +1,2 @@
+import{jV as c,aa as f,bK as i}from"./index-XU9Qjxfb.js";import{s as m,n as h}from"./queryRelatedRecords-BxD8I6Bs.js";async function d(e,t,r){t=c.from(t);const a=f(e);return m(a,t,r).then(n=>{const o=n.data,s={};return Object.keys(o).forEach(u=>s[u]=i.fromJSON(o[u])),s})}async function x(e,t,r){t=c.from(t);const a=f(e);return h(a,t,{...r}).then(n=>n.data)}export{d as executeRelationshipQuery,x as executeRelationshipQueryForCount};
+//# sourceMappingURL=executeRelationshipQuery-uWIHpuIc.js.map

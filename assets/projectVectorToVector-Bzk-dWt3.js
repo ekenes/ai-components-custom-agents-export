@@ -1,2 +1,0 @@
-import{gJ as l,gG as m,Q as t}from"./index-B05090t7.js";import{n as a}from"./projectPointToVector-DcSyvrIv.js";import{t as s}from"./dehydratedPoint-Z5ONvFg_.js";function g(r,e,f,o){return!(e==null||o==null||r.length<2)&&(l(e,o)?m(r,e,0,f,o,0,1):(n.x=r[0],n.y=r[1],n.z=r[2],n.spatialReference=e,a(n,f,o)))}const n=s(0,0,0,t.WGS84);export{g as p};
-//# sourceMappingURL=projectVectorToVector-Bzk-dWt3.js.map

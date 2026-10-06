@@ -1,2 +1,0 @@
-import{OperatorCrosses as r}from"./OperatorCrosses-C_vCsPSG.js";import{hG as o,hz as n,o as c}from"./index-B05090t7.js";const u=new r;function a(e,s){const t=o(e);return u.execute(t.getGeometry(),n(s),t.getSpatialReference(),null)}function f(e,s){return c("json.crossesOperator","execute","crossesExecute"),a(e,s)}export{a as crossesExecute,f as execute};
-//# sourceMappingURL=crossesOperator-pRiDPdki.js.map

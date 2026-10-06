@@ -1,0 +1,2 @@
+import{gJ as c,gG as f,gK as i,a_ as u,fG as l}from"./index-XU9Qjxfb.js";function o(a,r,n,e){if(c(a.spatialReference,n))return s[0]=a.x,s[1]=a.y,s[2]=a.z??0,f(s,a.spatialReference,0,r,n,0);const t=i(a,n,e);return!!t&&(r[0]=t.x,r[1]=t.y,r[2]=t.z??0,!0)}async function g(a,r,n,e){return await l(a.spatialReference,n,null,e),o(a,r,n)}const s=u();export{g as c,o as n};
+//# sourceMappingURL=projectPointToVector-s2-ztV-e.js.map

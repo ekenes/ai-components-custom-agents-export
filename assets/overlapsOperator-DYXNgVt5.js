@@ -1,0 +1,2 @@
+import{OperatorOverlaps as o}from"./OperatorOverlaps-C7ihQvKp.js";import{o as n,hG as a,hz as s}from"./index-XU9Qjxfb.js";const p=new o;function c(e,t){const r=a(e);return p.execute(r.getGeometry(),s(t),r.getSpatialReference(),null)}function x(e,t){return n("json.overlapsOperator","execute","overlapsExecute"),c(e,t)}export{x as execute,c as overlapsExecute};
+//# sourceMappingURL=overlapsOperator-DYXNgVt5.js.map

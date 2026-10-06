@@ -1,0 +1,2 @@
+import{ar as o,av as s,as as i}from"./index-XU9Qjxfb.js";import{m as n}from"./OperatorProximity-_jrUlMVh.js";const d=new n;function l(t,a){if(t.getGeometryType()===o.enumEnvelope){const r=new s;r.addEnvelope(t,!1),t=r}const e=d.getNearestCoordinate(t,a.getXY(),!0,!0);return e.isEmpty()?null:{coordinate:new i({pt:e.m_coordinate}),distance:e.m_distance,sideOfLine:e.m_distance===0?"straddle":e.m_bRightSide?"right":"left"}}export{l as executeNearestCoordinate};
+//# sourceMappingURL=nearestCoordinate-Cj_dUucs.js.map

@@ -1,2 +1,0 @@
-import{ee as a,dN as u}from"./index-B05090t7.js";function i(e,n){return e===n||e!=null&&n!=null&&a(e.spatialReference,n.spatialReference)&&e.x===n.x&&e.y===n.y&&e.z===n.z&&e.m===n.m}function c(e,n,l){return e===n||e!=null&&n!=null&&a(e.spatialReference,n.spatialReference)&&u(e.x,n.x,l)&&u(e.y,n.y,l)&&u(e.z??0,n.z??0,l)&&u(e.m??0,n.m??0,l)}export{i as a,c as u};
-//# sourceMappingURL=dehydratedFeatureComparison-DajYBLbx.js.map

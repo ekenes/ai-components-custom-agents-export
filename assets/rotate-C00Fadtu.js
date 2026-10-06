@@ -1,0 +1,2 @@
+import{eI as u,eL as l,eM as v}from"./index-XU9Qjxfb.js";function I(i,a,s,r){const[e,n,t,o,c,p,b]=a.a,x=c??0,g=p??Math.hypot(e[0]-n[0],e[1]-n[1]),j=b??1,f=Math.cos(r),h=Math.sin(r),[M,m]=s,k=v(f,h,0,-h,f,0,M-f*M+h*m,m-h*M-f*m,1);return l(i,{a:[e,n,t,o,x,g,j]},k)}function L(i,a,s){const[r,e,n]=i.b,t=[...r],o=[...e],c=[...n];return u(t,t,a,s),u(o,o,a,s),u(c,c,a,s),{b:[t,o,c]}}function O(i,a,s){const[r,e]=i.c,n=[...r],t=[...e];return u(n,n,a,s),u(t,t,a,s),{c:[n,t]}}export{I as c,L as i,O as n};
+//# sourceMappingURL=rotate-C00Fadtu.js.map

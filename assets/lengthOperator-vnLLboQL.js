@@ -1,0 +1,2 @@
+import{o as s,M as c,b as o,fB as a}from"./index-XU9Qjxfb.js";function p(e,n={}){const{unit:u}=n;let t=c(e).calculateLength2D();if(t&&u){const r=o(e);t=a(t,r,u)}return t}function g(e,n={}){return s("lengthOperator","execute","lengthExecute"),p(e,n)}const l=!0,h=!!l;export{g as execute,p as lengthExecute,l as lengthSupportsCurves,h as supportsCurves};
+//# sourceMappingURL=lengthOperator-vnLLboQL.js.map
