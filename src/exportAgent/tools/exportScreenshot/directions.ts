@@ -55,50 +55,79 @@ export function getRouteDirectionText(
   return text;
 }
 
-/** Append a readable, wrapped directions panel beneath the original map image. */
+/** Add a map title above the image and optional directions beneath it. */
 export async function appendDirectionsToScreenshot(
   dataUrl: string,
   directions: readonly string[],
+  title?: string,
 ): Promise<string> {
-  if (!directions.length) return dataUrl;
+  const mapTitle = title?.trim();
   const image = new Image();
   image.src = dataUrl;
   await image.decode();
   const canvas = document.createElement("canvas");
-  canvas.width = Math.max(image.naturalWidth, 480);
+  // Canvas PNG exports use 96 dpi: 0.25 inches equals 24 pixels.
+  const margin = 0.25 * 96;
+  const contentWidth = Math.max(image.naturalWidth, 480);
+  canvas.width = contentWidth + margin * 2;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("Unable to render screenshot directions.");
   const font = "16px sans-serif";
   context.font = font;
   const padding = 24;
   const lineHeight = 26;
-  const maxWidth = canvas.width - padding * 2;
-  const lines = ["Directions"];
-  for (const text of directions) {
-    let line = "";
-    // Character-based wrapping also handles very long names without spaces.
-    for (const character of text.replace(/\s+/g, " ")) {
-      if (line && context.measureText(line + character).width > maxWidth) {
-        lines.push(line.trim());
-        line = "";
+  const maxWidth = contentWidth - padding * 2;
+  const wrapText = (texts: readonly string[]) => {
+    const wrapped: string[] = [];
+    for (const text of texts) {
+      let line = "";
+      // Character-based wrapping also handles very long names without spaces.
+      for (const character of text.replace(/\s+/g, " ")) {
+        if (line && context.measureText(line + character).width > maxWidth) {
+          wrapped.push(line.trim());
+          line = "";
+        }
+        line += character;
       }
-      line += character;
+      wrapped.push(line.trim());
     }
-    lines.push(line.trim());
-  }
-  canvas.height = image.naturalHeight + padding * 2 + lines.length * lineHeight;
+    return wrapped;
+  };
+  context.font = "bold 24px sans-serif";
+  const titleLines = mapTitle ? wrapText([mapTitle]) : [];
+  const titleLineHeight = 34;
+  const titleHeight = titleLines.length
+    ? padding * 2 + titleLines.length * titleLineHeight
+    : 0;
+  context.font = font;
+  const lines = directions.length
+    ? wrapText(["Directions", ...directions])
+    : [];
+  const directionsHeight = lines.length
+    ? padding * 2 + lines.length * lineHeight
+    : 0;
+  canvas.height =
+    margin * 2 + titleHeight + image.naturalHeight + directionsHeight;
   context.fillStyle = "#ffffff";
   context.fillRect(0, 0, canvas.width, canvas.height);
-  context.drawImage(image, 0, 0);
+  context.drawImage(image, margin, margin + titleHeight);
   // Resizing a canvas resets its drawing state.
-  context.font = font;
   context.fillStyle = "#1f2937";
   context.textBaseline = "top";
+  context.font = "bold 24px sans-serif";
+  titleLines.forEach((line, index) => {
+    context.fillText(
+      line,
+      margin + padding,
+      margin + padding + index * titleLineHeight,
+    );
+  });
+  context.font = font;
   lines.forEach((line, index) => {
     context.fillText(
       line,
-      padding,
-      image.naturalHeight + padding + index * lineHeight,
+      margin + padding,
+      margin + titleHeight + image.naturalHeight + padding + index * lineHeight,
     );
   });
   const result = canvas.toDataURL("image/png");

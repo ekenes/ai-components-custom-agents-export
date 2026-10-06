@@ -7,7 +7,7 @@ import {
 export const exportScreenshot = async (
   options: ExportScreenshotOptions,
 ): Promise<string> => {
-  const { mapElement } = options;
+  const { mapElement, filename } = options;
 
   return mapElement
     .takeScreenshot()
@@ -20,6 +20,7 @@ export const exportScreenshot = async (
       return appendDirectionsToScreenshot(
         dataUrl,
         getRouteDirectionText(mapElement),
+        filename,
       );
     })
     .catch((error) => {
