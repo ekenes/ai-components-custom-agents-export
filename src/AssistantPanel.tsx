@@ -13,6 +13,7 @@ import "@arcgis/map-components/components/arcgis-directions";
 
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
 import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
+import type { ArcgisAssistantChatEntry } from "@arcgis/ai-components/components/arcgis-assistant-chat-entry";
 import type { UXSuggestion } from "@arcgis/ai-components/utils/index.js";
 import { NetworkAnalysisAgent } from "./networkAnalysisAgent";
 import { MapExportAgent } from "./exportAgent";
@@ -80,6 +81,51 @@ export function AssistantPanel({
   const assistantRef = useRef<ArcgisAssistant | null>(null);
   const processedResponses = useRef(new Set<string>());
   const followUpRuns = useRef(new Map<string, AbortController>());
+
+  const suggestedPrompts = [
+    // "Go to the Frankfurt convention center",
+    "How far can I get in 20 minutes walking from this location?",
+    "Show transit stops within this area that have service every 3 minutes or less. List a few of them by name.",
+    "Save this map as an image",
+  ];
+
+  const scriptPrompts = () => {
+    const assistantElement = assistantRef.current;
+    if (!assistantElement) return;
+    // promptListenerCleanup.current?.();
+    const questionLength = suggestedPrompts.length;
+    let questionIndex = -1;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const key = event.key;
+      if (key !== "ArrowUp" && key !== "ArrowDown") return;
+      // The event path crosses nested shadow roots without assuming their layout.
+      const textArea = event
+        .composedPath()
+        .find(
+          (element): element is ArcgisAssistantChatEntry =>
+            element instanceof HTMLElement &&
+            element.localName === "arcgis-assistant-chat-entry",
+        );
+      if (
+        !textArea ||
+        !questionLength ||
+        event.isComposing ||
+        event.defaultPrevented
+      )
+        return;
+      questionIndex = Math.min(
+        Math.max(questionIndex + (key === "ArrowUp" ? -1 : 1), 0),
+        questionLength - 1,
+      );
+      const prompt = suggestedPrompts[questionIndex];
+      if (prompt === undefined) return;
+      event.preventDefault();
+      textArea.inputValue = prompt;
+    };
+    assistantElement.addEventListener("keydown", handleKeyDown);
+  };
+
   useEffect(
     () => () => {
       followUpRuns.current.forEach((controller) => controller.abort());
@@ -377,15 +423,9 @@ export function AssistantPanel({
           reference-element="#main-map"
           heading="Walk and drive times"
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
-          entryMessage="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
-          suggestedPrompts={[
-            "Go to the Frankfurt convention center",
-            "How far can I get in 20 minutes walking from this location?",
-            "Show transit stops within this area that have service every 3 minutes or less. List a few of them by name.",
-            "Show me the fastest walking route to this location from the convention center",
-          ]}
+          entry-message="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
+          suggestedPrompts={["Go to the Frankfurt convention center"]}
           log-enabled
-          keep-suggested-prompts
           onarcgisSlottableRequest={(event) => {
             const nextRequest = event.detail;
             setSlottableRequests((currentRequests: any) => {
@@ -397,6 +437,7 @@ export function AssistantPanel({
                 : [...remainingRequests, nextRequest];
             });
           }}
+          onarcgisReady={scriptPrompts}
         >
           <arcgis-assistant-data-exploration-agent></arcgis-assistant-data-exploration-agent>
           <arcgis-assistant-navigation-agent></arcgis-assistant-navigation-agent>
