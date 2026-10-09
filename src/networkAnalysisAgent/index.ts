@@ -27,5 +27,3 @@ export const NetworkAnalysisAgent = new SkillAgent({
   instructions:
     "Use shared resources from earlier agents for spatial inputs and publish reusable geometry through tool artifacts.",
 });
-
-// instructions needed for 2 or more skills

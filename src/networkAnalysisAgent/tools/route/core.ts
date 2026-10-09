@@ -62,6 +62,7 @@ export async function solveRoute(
     const symbol = routeLayer.defaultSymbols.directionLines;
     if (symbol?.type === "simple-line") {
       symbol.style = "short-dot";
+      symbol.width = 3;
     }
   }
 
