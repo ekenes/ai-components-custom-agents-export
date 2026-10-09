@@ -81,6 +81,9 @@ export function AssistantPanel({
   const assistantRef = useRef<ArcgisAssistant | null>(null);
   const processedResponses = useRef(new Set<string>());
   const followUpRuns = useRef(new Map<string, AbortController>());
+  const [initialSuggestedPrompts, setInitialSuggestedPrompts] = useState<
+    string[]
+  >(["Go to the Frankfurt convention center"]);
 
   const suggestedPrompts = [
     // "Go to the Frankfurt convention center",
@@ -424,7 +427,8 @@ export function AssistantPanel({
           heading="Walk and drive times"
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
           entry-message="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
-          suggestedPrompts={["Go to the Frankfurt convention center"]}
+          suggestedPrompts={initialSuggestedPrompts}
+          onarcgisSubmit={() => setInitialSuggestedPrompts([])}
           log-enabled
           onarcgisSlottableRequest={(event) => {
             const nextRequest = event.detail;

@@ -11,10 +11,10 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@arcgis/ai-components": "next",
-    "@arcgis/core": "next",
-    "@arcgis/map-components": "next",
-    "@esri/calcite-components": "next",
+    "@arcgis/ai-components": "rc",
+    "@arcgis/core": "rc",
+    "@arcgis/map-components": "rc",
+    "@esri/calcite-components": "rc",
     "@langchain/core": "^1.2.12",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
