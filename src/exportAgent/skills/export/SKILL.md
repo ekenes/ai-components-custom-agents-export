@@ -1,12 +1,14 @@
 ---
 name: map-export
-description: Exportiert die aktuelle Karte als Webkarte, PDF oder Screenshot.
+description: Exports the current map as a web map, PDF, or screenshot.
 allowed-tools: saveAsWebMap exportToPdf exportScreenshot
 ---
 
-# Kartenexport
+# Map Export
 
-- Verwenden Sie `saveAsWebMap`, um die aktuelle Karte als interaktive ArcGIS-Webkarte zu speichern.
-- Verwenden Sie `exportToPdf`, um die aktuelle Karte als PDF-Datei zu exportieren.
-- Verwenden Sie `exportScreenshot`, um die aktuelle Karte als .png-Bild zu exportieren. Wenn sichtbare Routen Wegbeschreibungen enthalten, fügt das Werkzeug diese Beschreibungen sowie die verfügbaren Entfernungen automatisch unterhalb der Karte in dasselbe Bild ein; eine separate Routenabfrage ist nicht erforderlich.
-- Verwenden Sie genau das Werkzeug, das dem gewünschten Exportformat entspricht.
+- Use `saveAsWebMap` to save the current map state as an interactive ArcGIS Online web map.
+- Use `exportToPdf` to export the current map state as a PDF.
+- Use `exportScreenshot` to export the current map state as a PNG image. If visible routes contain directions, the tool automatically appends those directions and available distances below the map in the same image; no separate routing request is needed.
+- Use exactly the tool that matches the requested export format.
+
+<!-- skill more useful when it requires multiple tool calls/looping -->
