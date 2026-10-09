@@ -1,11 +1,14 @@
 import { sendUXSuggestion } from "@arcgis/ai-components/utils/index.js";
 import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
-import { tool, type ToolRuntime } from "@langchain/core/tools";
+import {
+  FunctionTool,
+  type FunctionToolExecute,
+} from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
 import z from "zod";
 import { getNetworkAnalysisContext } from "../../context";
 import {
+  getSharedPointResources,
   resolveSharedPointResource,
-  type SharedResourcesToolState,
 } from "../shared/pointResources";
 import { solveRoute } from "./core";
 
@@ -26,12 +29,12 @@ export const solveRouteSchema = z.object({
   ]),
 });
 
-export async function solveRouteWrapper(
-  { sharedResourceIds, travelModeName }: z.infer<typeof solveRouteSchema>,
-  runtime: ToolRuntime<SharedResourcesToolState>,
-): Promise<AgentToolResponse<{ layerId: string }>> {
-  const { mapElement } = getNetworkAnalysisContext(runtime);
-  const resources = runtime.state?.agentExecutionContext?.sharedResources;
+export const solveRouteWrapper: FunctionToolExecute<
+  z.infer<typeof solveRouteSchema>,
+  AgentToolResponse<{ layerId: string }>
+> = async ({ sharedResourceIds, travelModeName }, config) => {
+  const { mapElement } = getNetworkAnalysisContext(config);
+  const resources = getSharedPointResources(config);
   const stops = sharedResourceIds.map((id) =>
     resolveSharedPointResource(id, resources),
   );
@@ -39,12 +42,12 @@ export async function solveRouteWrapper(
     stops,
     travelModeName,
     mapElement,
-    runtime.signal,
+    config?.signal,
   );
 
   await sendUXSuggestion(
     { type: "directions", data: { layerId: result.layerId } },
-    runtime,
+    config,
   );
 
   return [
@@ -66,12 +69,14 @@ export async function solveRouteWrapper(
       ],
     },
   ];
-}
+};
 
-export const solveRouteTool = tool(solveRouteWrapper, {
+export const solveRouteTool = new FunctionTool({
   name: "solveRoute",
   description:
     "Solves a route between shared point resources in the supplied order, updates and adds a RouteLayer to the map, displays interactive directions in chat, and publishes route geometry as a shared polyline. Do not repeat turn-by-turn steps in text.",
-  schema: solveRouteSchema,
-  responseFormat: "content_and_artifact",
+  execute: solveRouteWrapper,
+  inputSchema: solveRouteSchema,
+  responseFormat: "content-and-artifact",
+  resultMode: "continue",
 });

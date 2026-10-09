@@ -1,6 +1,6 @@
 import { SkillAgent } from "@arcgis/ai-components/agent-utils/SkillAgent.js";
 import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
-import { tool, type ToolRuntime } from "@langchain/core/tools";
+import { FunctionTool } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
 import z from "zod";
 
 const suggestionsSchema = z.object({
@@ -9,22 +9,21 @@ const suggestionsSchema = z.object({
 
 // Per-invocation sinks keep overlapping requests isolated.
 const suggestions = new Map<string, string[]>();
-const suggestFollowUps = tool(
-  ({ prompts }, runtime: ToolRuntime) => {
-    const id = runtime.configurable?.followUpRunId;
+const suggestFollowUps = new FunctionTool({
+  name: "suggestFollowUps",
+  description:
+    "Records up to three grounded follow-up questions for the completed response.",
+  inputSchema: suggestionsSchema,
+  resultMode: "continue",
+  execute: ({ prompts }, config) => {
+    const id = config?.configurable?.followUpRunId;
     if (typeof id !== "string" || !suggestions.has(id)) {
       throw new Error("Follow-up invocation context is unavailable.");
     }
     suggestions.set(id, [...new Set(prompts)]);
     return "Follow-up prompts recorded. Finish without additional actions.";
   },
-  {
-    name: "suggestFollowUps",
-    description:
-      "Records up to three grounded follow-up questions for the completed response.",
-    schema: suggestionsSchema,
-  },
-);
+});
 
 export const FollowUpAgent = new SkillAgent({
   id: "followUps",

@@ -14,13 +14,11 @@ export const MapExportAgent = new SkillAgent({
   skillLoaders,
   toolLoaders: {
     saveAsWebMap: async () =>
-      (await import("./tools/saveAsWebMap")).saveAsWebMapTool.getTool(),
+      (await import("./tools/saveAsWebMap")).saveAsWebMapTool,
     exportToPdf: async () =>
-      (await import("./tools/exportToPdf/adapter")).exportToPdfTool.getTool(),
+      (await import("./tools/exportToPdf/adapter")).exportToPdfTool,
     exportScreenshot: async () =>
-      (
-        await import("./tools/exportScreenshot/adapter")
-      ).exportScreenshotTool.getTool(),
+      (await import("./tools/exportScreenshot/adapter")).exportScreenshotTool,
   },
   modelTier: "fast",
   systemPrompt: "You are an ArcGIS map export agent.",

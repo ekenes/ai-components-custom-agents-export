@@ -5,13 +5,16 @@
 // and returns an identifier for the calculated service area.
 
 import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
-import { tool, type ToolRuntime } from "@langchain/core/tools";
+import {
+  FunctionTool,
+  type FunctionToolExecute,
+} from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
 import z from "zod";
 import { findServiceAreas } from "./core";
 import { getNetworkAnalysisContext } from "../../context/";
 import {
+  getSharedPointResources,
   resolveSharedPointResource,
-  type SharedResourcesToolState,
 } from "../shared/pointResources";
 
 type FindServiceAreasInput = {
@@ -27,19 +30,17 @@ type FindServiceAreasInput = {
   travelDirection: "from-facility" | "to-facility";
 };
 
-export const findServiceAreasWrapper = async (
-  {
-    sharedResourceId,
-    driveTimeCutoffs,
-    travelModeName,
-    travelDirection,
-  }: FindServiceAreasInput,
-  runtime: ToolRuntime<SharedResourcesToolState>,
-): Promise<AgentToolResponse<{ calculationId: string }>> => {
-  const { mapElement } = getNetworkAnalysisContext(runtime);
+export const findServiceAreasWrapper: FunctionToolExecute<
+  FindServiceAreasInput,
+  AgentToolResponse<{ calculationId: string }>
+> = async (
+  { sharedResourceId, driveTimeCutoffs, travelModeName, travelDirection },
+  config,
+) => {
+  const { mapElement } = getNetworkAnalysisContext(config);
   const pointResource = resolveSharedPointResource(
     sharedResourceId,
-    runtime.state?.agentExecutionContext?.sharedResources,
+    getSharedPointResources(config),
   );
 
   const result = await findServiceAreas(
@@ -104,10 +105,12 @@ export const findServiceAreasSchema = z.object({
     ),
 });
 
-export const findServiceAreasTool = tool(findServiceAreasWrapper, {
+export const findServiceAreasTool = new FunctionTool({
   name: "findServiceAreas",
   description:
     "Calculates service areas from a point shared resource without changing the map. Returns a calculationId for addServiceAreaFeatures and publishes the resulting polygons as shared resources.",
-  schema: findServiceAreasSchema,
-  responseFormat: "content_and_artifact",
+  execute: findServiceAreasWrapper,
+  inputSchema: findServiceAreasSchema,
+  responseFormat: "content-and-artifact",
+  resultMode: "continue",
 });

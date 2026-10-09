@@ -1,10 +1,22 @@
+import type { FunctionToolExecute } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
 import z from "zod";
+
+type AgentExecutionConfig = NonNullable<
+  Parameters<FunctionToolExecute<Record<string, never>, unknown>>[1]
+>;
 
 export type SharedResourcesToolState = {
   agentExecutionContext?: {
     sharedResources?: readonly unknown[];
   };
 };
+
+export function getSharedPointResources(config?: AgentExecutionConfig) {
+  const runtime = config as
+    | (AgentExecutionConfig & { state?: SharedResourcesToolState })
+    | undefined;
+  return runtime?.state?.agentExecutionContext?.sharedResources;
+}
 
 const pointResourceSchema = z.object({
   id: z.string(),
@@ -42,7 +54,9 @@ export function resolveSharedPointResource(
 
   const parsed = pointResourceSchema.safeParse(resource);
   if (!parsed.success) {
-    throw new Error(`Shared resource ${id} does not contain valid point geometry.`);
+    throw new Error(
+      `Shared resource ${id} does not contain valid point geometry.`,
+    );
   }
 
   return parsed.data;
