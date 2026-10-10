@@ -14,7 +14,7 @@ import "@arcgis/map-components/components/arcgis-directions";
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
 import type { ArcgisAssistant } from "@arcgis/ai-components/components/arcgis-assistant";
 import type { ArcgisAssistantChatEntry } from "@arcgis/ai-components/components/arcgis-assistant-chat-entry";
-import type { UXSuggestion } from "@arcgis/ai-components/utils/index.js";
+import type { UXSuggestion } from "@arcgis/ai-components/orchestrator/signals.js";
 import { NetworkAnalysisAgent } from "./networkAnalysisAgent";
 import { MapExportAgent } from "./exportAgent";
 import { generateFollowUps } from "./followUpAgent";

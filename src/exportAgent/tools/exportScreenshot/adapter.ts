@@ -8,7 +8,7 @@ import {
   createHumanInTheLoopToolMiddleware,
   getHumanInTheLoopPayload,
 } from "@arcgis/ai-components/agent-utils/middlewares/humanInTheLoop.js";
-import { sendUXSuggestion } from "@arcgis/ai-components/utils/index.js";
+import { sendUXSuggestion } from "@arcgis/ai-components/orchestrator/signals.js";
 
 type ExportScreenshotInput = Record<string, never>;
 
