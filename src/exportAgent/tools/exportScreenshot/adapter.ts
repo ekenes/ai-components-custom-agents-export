@@ -20,7 +20,7 @@ export const exportScreenshotWrapper: FunctionToolExecute<
   const hilFilename = getHumanInTheLoopPayload<string>(config);
   const filename = hilFilename?.trim() || "Untitled Map Screenshot";
 
-  const screenshotUrl = await exportScreenshot({
+  const { screenshotUrl, thumbnailUrl } = await exportScreenshot({
     filename,
     mapElement,
   });
@@ -33,7 +33,7 @@ export const exportScreenshotWrapper: FunctionToolExecute<
         url: screenshotUrl,
         title: filename,
         filename,
-        thumbnailUrl: screenshotUrl,
+        thumbnailUrl,
       },
     },
     config,

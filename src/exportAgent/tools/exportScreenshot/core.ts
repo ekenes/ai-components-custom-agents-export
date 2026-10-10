@@ -6,7 +6,7 @@ import {
 
 export const exportScreenshot = async (
   options: ExportScreenshotOptions,
-): Promise<string> => {
+): Promise<{ screenshotUrl: string; thumbnailUrl: string }> => {
   const { mapElement, filename } = options;
 
   return mapElement
@@ -17,11 +17,12 @@ export const exportScreenshot = async (
         throw new Error("Screenshot capture completed without an image URL.");
       }
       console.log("Screenshot captured successfully.");
-      return appendDirectionsToScreenshot(
+      const screenshotUrl = await appendDirectionsToScreenshot(
         dataUrl,
         getRouteDirectionText(mapElement),
         filename,
       );
+      return { screenshotUrl, thumbnailUrl: dataUrl };
     })
     .catch((error) => {
       console.error("Error capturing screenshot:", error);
