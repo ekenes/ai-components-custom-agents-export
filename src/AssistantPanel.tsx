@@ -3,12 +3,14 @@ import React, { useEffect, useRef, useState } from "react";
 import "@esri/calcite-components/components/calcite-panel";
 import "@esri/calcite-components/components/calcite-shell-panel";
 import "@esri/calcite-components/components/calcite-card";
+import "@esri/calcite-components/components/calcite-loader";
 
 import "@arcgis/ai-components/components/arcgis-assistant";
 import "@arcgis/ai-components/components/arcgis-assistant-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-navigation-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-data-exploration-agent";
 import "@arcgis/ai-components/components/arcgis-assistant-help-agent";
+import "@arcgis/ai-components/components/arcgis-assistant-suggested-prompts";
 import "@arcgis/map-components/components/arcgis-directions";
 
 import type { ArcgisMap } from "@arcgis/map-components/components/arcgis-map";
@@ -182,6 +184,29 @@ export function AssistantPanel({
       return;
     }
     const block = request.data.block;
+
+    if (block?.type === "follow-up-suggestions") {
+      const prompts = Array.isArray(block.data?.prompts)
+        ? block.data.prompts.filter(
+            (prompt): prompt is string => typeof prompt === "string",
+          )
+        : [];
+      return (
+        <div key={request.slotName} slot={request.slotName}>
+          {block.data?.loading ? (
+            <div
+              role="status"
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <calcite-loader inline scale="s" label="Generating suggestions" />
+              <em>Generating suggestions...</em>
+            </div>
+          ) : prompts.length ? (
+            <arcgis-assistant-suggested-prompts prompts={prompts} />
+          ) : null}
+        </div>
+      );
+    }
 
     if (block?.type === "directions") {
       const layerId = block.data?.layerId;
@@ -394,13 +419,10 @@ export function AssistantPanel({
             const responseIndex = assistant.messages.findIndex(
               (message) => message.id === detail.id,
             );
-            try {
-              const prompts = await generateFollowUps(
-                assistant.messages.toArray().slice(0, responseIndex + 1),
-                availableAgents,
-                controller.signal,
-              );
-              if (controller.signal.aborted || !prompts.length) return;
+            const conversation = assistant.messages
+              .toArray()
+              .slice(0, responseIndex + 1);
+            const updateFollowUps = (prompts: string[], loading: boolean) => {
               const index = assistant.messages.findIndex(
                 (message) => message.id === detail.id,
               );
@@ -410,16 +432,33 @@ export function AssistantPanel({
                 ...message,
                 blocks: [
                   ...(message.blocks ?? []).filter(
-                    (block) => block.type !== "suggested-prompts",
+                    (block) => block.type !== "follow-up-suggestions",
                   ),
-                  { type: "suggested-prompts", data: { prompts } },
+                  ...(loading || prompts.length
+                    ? [
+                        {
+                          type: "follow-up-suggestions",
+                          data: { prompts, loading },
+                        },
+                      ]
+                    : []),
                 ],
               });
+            };
+            let prompts: string[] = [];
+            try {
+              updateFollowUps([], true);
+              prompts = await generateFollowUps(
+                conversation,
+                availableAgents,
+                controller.signal,
+              );
             } catch (error) {
               if (!controller.signal.aborted)
                 console.warn("Follow-up suggestions unavailable:", error);
             } finally {
               followUpRuns.current.delete(detail.id);
+              updateFollowUps(controller.signal.aborted ? [] : prompts, false);
             }
           }}
           reference-element="#main-map"
