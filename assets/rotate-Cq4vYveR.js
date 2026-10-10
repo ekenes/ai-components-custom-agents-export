@@ -1,0 +1,2 @@
+import{eI as u,eL as j,eM as v}from"./index-sBTGSh23.js";function I(n,a,e,i){let[c,t,o,s,r,p,b]=a.a,m=r??0,y=p??Math.hypot(c[0]-t[0],c[1]-t[1]),d=b??1,f=Math.cos(i),h=Math.sin(i),[l,M]=e,g=v(f,h,0,-h,f,0,l-f*l+h*M,M-h*l-f*M,1);return j(n,{a:[c,t,o,s,m,y,d]},g)}function L(n,a,e){let[i,c,t]=n.b,o=[...i],s=[...c],r=[...t];return u(o,o,a,e),u(s,s,a,e),u(r,r,a,e),{b:[o,s,r]}}function _(n,a,e){let[i,c]=n.c,t=[...i],o=[...c];return u(t,t,a,e),u(o,o,a,e),{c:[t,o]}}export{_ as a,L as i,I as r};
+//# sourceMappingURL=rotate-Cq4vYveR.js.map

@@ -1,0 +1,2 @@
+import"./index-sBTGSh23.js";import{o as c}from"./VertexArrayObject-BHyZeHqU.js";class p{constructor(t){this._rctx=t,this._store=new Map}dispose(){this._store.forEach(t=>t.dispose()),this._store.clear()}get(t,s,r,h){let e=t+s+JSON.stringify(Array.from(r.entries())),o=this._store.get(e);if(o)return o;let i=new c(this._rctx,t,s,r,h);return this._store.set(e,i),i}get test(){}}export{p as t};
+//# sourceMappingURL=ProgramCache-CacL_Kmx.js.map

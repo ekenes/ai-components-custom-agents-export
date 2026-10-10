@@ -1,0 +1,2 @@
+import{r as f,aa as u,ab as l,ac as p,f as c}from"./index-sBTGSh23.js";async function w(a,s,r,e){if(!s)throw new f("post:missing-guid","guid for version is missing");let t=u(a),i=r.toJSON(),o=l(t.query,{query:p({...i,f:"json"}),...e,method:"post"});s.startsWith("{")&&(s=s.slice(1,-1));let d=`${t.path}/versions/${s}/deleteForwardEdits`,{data:n}=await c(d,o);return n}export{w as deleteForwardEdits};
+//# sourceMappingURL=deleteForwardEdits-Co_km7Mb.js.map

@@ -1,0 +1,2 @@
+import{q as e,G as f}from"./InterleavedLayout-CYPMZVjd.js";function o(r,u){return u.push(r.buffer),{buffer:r.buffer,layout:new e(r.layout)}}function t(r){return new f(r.layout).createView(r.buffer)}export{o as n,t as r};
+//# sourceMappingURL=workerHelper-poLaObKw.js.map

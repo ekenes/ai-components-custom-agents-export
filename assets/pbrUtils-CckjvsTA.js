@@ -1,2 +1,0 @@
-import{dl as a,j4 as l,j5 as i}from"./index-XU9Qjxfb.js";function m({normalTexture:n,metallicRoughnessTexture:r,metallicFactor:e,roughnessFactor:u,emissiveTexture:o,emissiveFactor:t,occlusionTexture:s}){return n==null&&r==null&&o==null&&(t==null||a(t,i))&&s==null&&(u==null||u===1)&&(e==null||e===1)}const x=l(1,1,.5),T=l(0,.6,.2),F=l(0,1,.2);export{F as i,x as o,m as t,T as u};
-//# sourceMappingURL=pbrUtils-CckjvsTA.js.map

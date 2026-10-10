@@ -1,0 +1,2 @@
+import{eB as e,dQ as i,c$ as r}from"./index-sBTGSh23.js";function o(n){if(!n)return[];let t=e(n)?[n]:i.isCollection(n)?n.toArray():Array.isArray(n)?n:[];return t=t?.filter(r),(t?.length??0)===0?[]:t}function l(n){return!!(n&&typeof n=="object"&&"pixelRanges"in n&&n.pixelRanges)}function s(n){return Array.isArray(n.pixelRanges)&&n.pixelRanges.length===0}export{s as a,l as i,o as r};
+//# sourceMappingURL=highlightUtils-Dmr45RS8.js.map

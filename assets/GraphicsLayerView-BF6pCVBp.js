@@ -1,0 +1,2 @@
+import{bC as s,bD as e}from"./index-sBTGSh23.js";import{b as h}from"./LayerView-BtI-CA2X.js";function i(t){s(e.getLogger(t),"highlightOptions",{replacement:"View.highlights",version:"4.34",see:"https://arcg.is/inbTa1#highlights",warnOnce:!0})}class o extends h{constructor(){super(...arguments),this.layer=null}get highlightOptions(){return i(this),null}set highlightOptions(r){i(this)}}export{o as i};
+//# sourceMappingURL=GraphicsLayerView-BF6pCVBp.js.map

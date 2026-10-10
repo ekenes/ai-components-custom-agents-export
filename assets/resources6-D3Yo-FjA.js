@@ -1,2 +1,0 @@
-import{gr as n}from"./index-XU9Qjxfb.js";const o={container:"container",containerActive:"container--active",contentCenter:"content-center",description:"description",heading:"heading",iconEnd:"icon-end",iconStart:"icon-start",scale:t=>`scale--${t}`},i={contentEnd:"content-end",contentStart:"content-start"},e="autocomplete-item",a={host:t=>`${e}-${t}`},s=n("calcite-autocomplete-item");export{o as C,a as I,i as S,s as i};
-//# sourceMappingURL=resources6-D3Yo-FjA.js.map

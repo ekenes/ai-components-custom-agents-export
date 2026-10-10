@@ -1,2 +1,0 @@
-import{ks as e,a3 as s,a4 as a,a6 as o}from"./index-XU9Qjxfb.js";import{i as r}from"./SketchTooltipInfo-DqAeXuQZ.js";let t=class extends r{constructor(i){super(i),this.type="translate",this.distance=e}clear(){this.distance=e}};s([a()],t.prototype,"type",void 0),s([a()],t.prototype,"distance",void 0),t=s([o("esri.views.interactive.tooltip.infos.TranslateTooltipInfo")],t);export{t as i};
-//# sourceMappingURL=TranslateTooltipInfo-BbMmCqpm.js.map

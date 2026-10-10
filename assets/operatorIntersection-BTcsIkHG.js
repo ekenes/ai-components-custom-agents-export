@@ -1,0 +1,2 @@
+import{du as c,aE as u}from"./index-sBTGSh23.js";const t=new c;function l(e,r){return t.accelerateGeometry(e,r,1)}function f(e,r,n){return t.execute(e,r,n,null)}function i(e,r,n,a){let o=t.executeMany(new u(e),new u([r]),n,null,a);return Array.from(o)}function p(){return t.supportsCurves()}export{l as accelerateGeometry,f as execute,i as executeMany,p as supportsCurves};
+//# sourceMappingURL=operatorIntersection-BTcsIkHG.js.map

@@ -1,0 +1,2 @@
+import{gF as f,gG as c,gH as i,a_ as l,fC as u}from"./index-sBTGSh23.js";function o(e,a,t,r){if(f(e.spatialReference,t))return s[0]=e.x,s[1]=e.y,s[2]=e.z??0,c(s,e.spatialReference,0,a,t,0);let n=i(e,t,r);return n?(a[0]=n.x,a[1]=n.y,a[2]=n.z??0,!0):!1}async function g(e,a,t,r){return await u(e.spatialReference,t,null,r),o(e,a,t)}const s=l();export{o as a,g as o};
+//# sourceMappingURL=projectPointToVector-CdrWiGiv.js.map

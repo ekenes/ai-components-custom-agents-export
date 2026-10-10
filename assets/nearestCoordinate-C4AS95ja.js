@@ -1,0 +1,2 @@
+import{ar as o,av as i,as as r}from"./index-sBTGSh23.js";import{u as s}from"./OperatorProximity-D-sZ20wo.js";const d=new s;function l(t,n){if(t.getGeometryType()===o.enumEnvelope){let a=new i;a.addEnvelope(t,!1),t=a}let e=d.getNearestCoordinate(t,n.getXY(),!0,!0);return e.isEmpty()?null:{coordinate:new r({pt:e.m_coordinate}),distance:e.m_distance,sideOfLine:e.m_distance===0?"straddle":e.m_bRightSide?"right":"left"}}export{l as executeNearestCoordinate};
+//# sourceMappingURL=nearestCoordinate-C4AS95ja.js.map

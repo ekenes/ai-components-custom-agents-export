@@ -1,0 +1,2 @@
+import{ee as u,dN as t}from"./index-sBTGSh23.js";function m(e,l){return e===l||e!=null&&l!=null&&u(e.spatialReference,l.spatialReference)&&e.x===l.x&&e.y===l.y&&e.z===l.z&&e.m===l.m}function c(e,l,a){return e===l||e!=null&&l!=null&&u(e.spatialReference,l.spatialReference)&&t(e.x,l.x,a)&&t(e.y,l.y,a)&&t(e.z??0,l.z??0,a)&&t(e.m??0,l.m??0,a)}export{c as a,m as i};
+//# sourceMappingURL=dehydratedFeatureComparison-CqZgolBq.js.map

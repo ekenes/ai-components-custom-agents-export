@@ -1,2 +1,0 @@
-import{OperatorCrosses as r}from"./OperatorCrosses-Dp6lJ02H.js";import{hG as o,hz as n,o as c}from"./index-XU9Qjxfb.js";const u=new r;function a(e,s){const t=o(e);return u.execute(t.getGeometry(),n(s),t.getSpatialReference(),null)}function f(e,s){return c("json.crossesOperator","execute","crossesExecute"),a(e,s)}export{a as crossesExecute,f as execute};
-//# sourceMappingURL=crossesOperator-Bm4Ygt5L.js.map

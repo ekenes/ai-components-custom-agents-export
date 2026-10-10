@@ -1,2 +1,0 @@
-import{fq as s,aE as o}from"./index-XU9Qjxfb.js";const t=new s;function c(e,u,n){return t.execute(e,u,n,null)}function l(e,u,n){const r=t.executeMany(new o(e),u,n,null);return Array.from(r)}function i(e,u,n){return t.isSimpleAsFeature(e,u,n,null,null)}function p(){return t.supportsCurves()}export{c as execute,l as executeMany,i as isSimpleAsFeature,p as supportsCurves};
-//# sourceMappingURL=operatorSimplify-Bm3ZxwRW.js.map

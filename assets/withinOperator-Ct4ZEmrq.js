@@ -1,0 +1,2 @@
+import{OperatorWithin as r}from"./OperatorWithin-DgFx2RGE.js";import{n as i,hD as o,hw as a}from"./index-sBTGSh23.js";const u=new r;function c(e,t,n){return u.execute(e,t,n,null)}function s(e,t){let n=o(e);return c(n.getGeometry(),a(t),n.getSpatialReference())}function p(e,t){return i("json.withinOperator","execute","withinExecute"),s(e,t)}export{p as execute,s as withinExecute};
+//# sourceMappingURL=withinOperator-Ct4ZEmrq.js.map

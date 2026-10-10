@@ -1,0 +1,2 @@
+import{aa as i,jV as m,a8 as r}from"./index-sBTGSh23.js";import{f as x}from"./queryTopFeatures-BqEWYwO7.js";async function u(n,o,e){let s=i(n),a=await x(s,m.from(o),{...e}),t=a.data.extent;return!t||isNaN(t.xmin)||isNaN(t.ymin)||isNaN(t.xmax)||isNaN(t.ymax)?{count:a.data.count,extent:null}:{count:a.data.count,extent:r.fromJSON(t)}}export{u as executeForTopExtents};
+//# sourceMappingURL=executeForTopExtents-DHPjlDZr.js.map
