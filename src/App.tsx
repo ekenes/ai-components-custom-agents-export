@@ -24,9 +24,6 @@ function App(): React.JSX.Element {
     () =>
       new WebMap({
         portalItem: {
-          // dev - bf216585a451481eba8418d581b0128d
-          // prod - 5dea2b521169451190cf8c3c8b1c0fc4
-          // prod final - efaf4dc63d654d0d89571425cacd6dd1
           id: "bf216585a451481eba8418d581b0128d",
         },
       }),
