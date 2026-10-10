@@ -75,21 +75,20 @@ type AssistantPanelProps = {
   mapElementRef: React.RefObject<ArcgisMap | null>;
 };
 
+const initialSuggestedPrompts = ["Go to the Frankfurt convention center"];
+
 export function AssistantPanel({
   mapElementRef,
 }: AssistantPanelProps): React.JSX.Element {
   const assistantRef = useRef<ArcgisAssistant | null>(null);
   const processedResponses = useRef(new Set<string>());
   const followUpRuns = useRef(new Map<string, AbortController>());
-  const [initialSuggestedPrompts, setInitialSuggestedPrompts] = useState<
-    string[]
-  >(["Go to the Frankfurt convention center"]);
 
   const suggestedPrompts = [
     // "Go to the Frankfurt convention center",
     "How far can I get in 20 minutes walking from this location?",
-    "Show transit stops within this area that have service every 3 minutes or less. List a few of them by name.",
-    "Save this map as an image",
+    "Show transit stops within this area that have service every 3 minutes or less. List a few of them in a table.",
+    "Exportieren Sie diese Karte als Bild.",
   ];
 
   const scriptPrompts = () => {
@@ -428,7 +427,6 @@ export function AssistantPanel({
           description="Use the chat below to calculate drive times and walking distances to understand the accessibility of different locations."
           entry-message="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
           suggestedPrompts={initialSuggestedPrompts}
-          onarcgisSubmit={() => setInitialSuggestedPrompts([])}
           log-enabled
           onarcgisSlottableRequest={(event) => {
             const nextRequest = event.detail;
