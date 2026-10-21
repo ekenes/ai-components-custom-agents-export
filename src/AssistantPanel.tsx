@@ -77,7 +77,9 @@ type AssistantPanelProps = {
   mapElementRef: React.RefObject<ArcgisMap | null>;
 };
 
-const initialSuggestedPrompts = ["Go to the Frankfurt convention center"];
+const initialSuggestedPrompts = [
+  "Go to the convention center at Messe Frankfurt",
+];
 
 export function AssistantPanel({
   mapElementRef,
