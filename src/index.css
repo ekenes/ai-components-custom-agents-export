@@ -15,3 +15,15 @@ arcgis-map {
 calcite-shell-panel {
   --calcite-shell-panel-width: 500px;
 }
+
+.route-directions {
+  width: 100%;
+  min-width: 0;
+}
+
+.route-directions arcgis-directions {
+  display: block;
+  width: 100%;
+  max-height: 600px;
+  overflow: auto;
+}

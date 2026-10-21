@@ -2,21 +2,20 @@ import {
   FunctionTool,
   type FunctionToolExecute,
 } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
-import z from "zod";
 import { exportToPdf } from "./core";
 import { getExportAgentContext } from "../../context";
 import {
   createHumanInTheLoopToolMiddleware,
   getHumanInTheLoopPayload,
 } from "@arcgis/ai-components/agent-utils/middlewares/humanInTheLoop.js";
-import { sendUXSuggestion } from "@arcgis/ai-components/agent-utils/index.js";
+import { sendUXSuggestion } from "@arcgis/ai-components/orchestrator/signals.js";
 
 type ExportToPdfInput = Record<string, never>;
 
 export const exportToPdfWrapper: FunctionToolExecute<
   ExportToPdfInput,
   string | null | undefined
-> = async ({}, config): Promise<string | undefined | null> => {
+> = async (_, config): Promise<string | undefined | null> => {
   const { mapElement } = getExportAgentContext(config);
   const hilFilename = getHumanInTheLoopPayload<string>(config);
   const filename = hilFilename?.trim() || "Untitled Map Export";
@@ -26,6 +25,14 @@ export const exportToPdfWrapper: FunctionToolExecute<
     mapElement,
   });
 
+  // A preview is optional: its failure must not hide a successful PDF export.
+  let thumbnailUrl: string | undefined;
+  try {
+    thumbnailUrl = (await mapElement.takeScreenshot())?.dataUrl;
+  } catch (error) {
+    console.warn("Unable to capture PDF map preview:", error);
+  }
+
   await sendUXSuggestion(
     {
       type: "button",
@@ -33,6 +40,7 @@ export const exportToPdfWrapper: FunctionToolExecute<
         label: "Open PDF",
         url: pdfUrl,
         title: filename,
+        thumbnailUrl,
       },
     },
     config,
@@ -40,8 +48,6 @@ export const exportToPdfWrapper: FunctionToolExecute<
 
   return "PDF exported successfully.";
 };
-
-const pdfExportSchema = z.object({});
 
 const hilFilenameSubmit = createHumanInTheLoopToolMiddleware<
   ExportToPdfInput,
@@ -59,8 +65,7 @@ export const exportToPdfTool = new FunctionTool<
 >({
   name: "exportToPdf",
   description: "Exports the current state of the map to a PDF file.",
-  inputSchema: pdfExportSchema,
   middlewares: [hilFilenameSubmit],
   execute: exportToPdfWrapper,
-  resultMode: "terminal",
+  resultMode: "continue",
 });

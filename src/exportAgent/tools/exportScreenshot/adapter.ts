@@ -2,26 +2,25 @@ import {
   FunctionTool,
   type FunctionToolExecute,
 } from "@arcgis/ai-components/agent-utils/tools/FunctionTool.js";
-import z from "zod";
 import { exportScreenshot } from "./core";
 import { getExportAgentContext } from "../../context";
 import {
   createHumanInTheLoopToolMiddleware,
   getHumanInTheLoopPayload,
 } from "@arcgis/ai-components/agent-utils/middlewares/humanInTheLoop.js";
-import { sendUXSuggestion } from "@arcgis/ai-components/agent-utils/index.js";
+import { sendUXSuggestion } from "@arcgis/ai-components/orchestrator/signals.js";
 
 type ExportScreenshotInput = Record<string, never>;
 
 export const exportScreenshotWrapper: FunctionToolExecute<
   ExportScreenshotInput,
   string | null | undefined
-> = async ({}, config): Promise<string | undefined | null> => {
+> = async (_, config): Promise<string | undefined | null> => {
   const { mapElement } = getExportAgentContext(config);
   const hilFilename = getHumanInTheLoopPayload<string>(config);
   const filename = hilFilename?.trim() || "Untitled Map Screenshot";
 
-  const screenshotUrl = await exportScreenshot({
+  const { screenshotUrl, thumbnailUrl } = await exportScreenshot({
     filename,
     mapElement,
   });
@@ -34,15 +33,14 @@ export const exportScreenshotWrapper: FunctionToolExecute<
         url: screenshotUrl,
         title: filename,
         filename,
+        thumbnailUrl,
       },
     },
     config,
   );
 
-  return "Screenshot exported successfully.";
+  return `${filename} successfully exported.`;
 };
-
-const screenshotExportSchema = z.object({});
 
 const hilFilenameSubmit = createHumanInTheLoopToolMiddleware<
   ExportScreenshotInput,
@@ -59,9 +57,9 @@ export const exportScreenshotTool = new FunctionTool<
   string | null | undefined
 >({
   name: "exportScreenshot",
-  description: "Captures the current state of the map as an image screenshot.",
-  inputSchema: screenshotExportSchema,
+  description:
+    "Captures the current state of the map as a PNG screenshot. Appends written directions and available distances for visible solved routes to the same downloadable image.",
   middlewares: [hilFilenameSubmit],
   execute: exportScreenshotWrapper,
-  resultMode: "terminal",
+  resultMode: "continue",
 });

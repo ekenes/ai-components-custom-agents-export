@@ -2,8 +2,9 @@
 // using ArcGIS services.
 // The tool takes input parameters such as facility locations,
 // drive time cutoffs, travel mode, and travel direction,
-// and returns a response that includes the generated service area polygons.
+// and returns an identifier for the calculated service area.
 
+import type { AgentToolResponse } from "@arcgis/ai-components/agents/tools/shared/types.js";
 import {
   FunctionTool,
   type FunctionToolExecute,
@@ -11,9 +12,13 @@ import {
 import z from "zod";
 import { findServiceAreas } from "./core";
 import { getNetworkAnalysisContext } from "../../context/";
+import {
+  getSharedPointResources,
+  resolveSharedPointResource,
+} from "../shared/pointResources";
 
 type FindServiceAreasInput = {
-  facilities: { x: number; y: number }[];
+  sharedResourceId: string;
   driveTimeCutoffs: number[];
   travelModeName:
     | "Walking Time"
@@ -27,34 +32,54 @@ type FindServiceAreasInput = {
 
 export const findServiceAreasWrapper: FunctionToolExecute<
   FindServiceAreasInput,
-  string
+  AgentToolResponse<{ calculationId: string }>
 > = async (
-  { facilities, driveTimeCutoffs, travelModeName, travelDirection },
+  { sharedResourceId, driveTimeCutoffs, travelModeName, travelDirection },
   config,
-): Promise<string> => {
+) => {
   const { mapElement } = getNetworkAnalysisContext(config);
+  const pointResource = resolveSharedPointResource(
+    sharedResourceId,
+    getSharedPointResources(config),
+  );
 
-  return await findServiceAreas(
+  const result = await findServiceAreas(
     {
-      facilities,
+      facilities: [pointResource.payload],
       driveTimeCutoffs,
       travelModeName,
       travelDirection,
     },
     mapElement,
   );
+
+  return [
+    result.message,
+    {
+      value: { calculationId: result.calculationId }, // may not be needed
+      sharedResourceAdditions: result.polygons.flatMap((graphic, index) => {
+        if (!graphic.geometry) {
+          return [];
+        }
+
+        const cutoff = driveTimeCutoffs[index % driveTimeCutoffs.length];
+        return [
+          {
+            kind: "polygon" as const,
+            description: `${cutoff ?? "Calculated"} minute ${travelModeName.toLowerCase()} service area from ${pointResource.description}`,
+            payload: graphic.geometry.toJSON(),
+          },
+        ];
+      }),
+    },
+  ];
 };
 
 export const findServiceAreasSchema = z.object({
-  facilities: z
-    .array(
-      z.object({
-        x: z.number().describe("Longitude coordinate (e.g., -118.2437)"),
-        y: z.number().describe("Latitude coordinate (e.g., 34.0522)"),
-      }),
-    )
+  sharedResourceId: z
+    .string()
     .describe(
-      "Array of facility locations with x (longitude) and y (latitude) coordinates.",
+      "Exact ID of a point returned by listSharedResources. Never invent an ID.",
     ),
   driveTimeCutoffs: z
     .array(z.number())
@@ -80,13 +105,12 @@ export const findServiceAreasSchema = z.object({
     ),
 });
 
-export const findServiceAreasTool = new FunctionTool<
-  FindServiceAreasInput,
-  string
->({
+export const findServiceAreasTool = new FunctionTool({
   name: "findServiceAreas",
   description:
-    "Calculates service areas (drive time polygons) that represent the area that can be reached when driving or walking on a street network. The calculated area is based on travel time to or from one or more facilities or destinations.",
-  inputSchema: findServiceAreasSchema,
+    "Calculates service areas from a point shared resource without changing the map. Returns a calculationId for addServiceAreaFeatures and publishes the resulting polygons as shared resources.",
   execute: findServiceAreasWrapper,
+  inputSchema: findServiceAreasSchema,
+  responseFormat: "content-and-artifact",
+  resultMode: "continue",
 });

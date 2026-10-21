@@ -1,51 +1,29 @@
-import { LLMAgent } from "@arcgis/ai-components/agent-utils/LLMAgent.js";
-import { agentTools } from "./tools";
-import { createAgentMiddleware } from "@arcgis/ai-components/agent-utils/middlewares/middleware.js";
+import { SkillAgent } from "@arcgis/ai-components/agent-utils/SkillAgent.js";
 
-const prompt = String.raw`Provides tools for geospatial services and operations including finding facilities and optimized routes.
+const skillLoaders = [
+  async (): Promise<string> =>
+    (await import("./skills/networkAnalysis/SKILL.md?raw")).default,
+] as const;
 
-	**Available Tools:**
+const description =
+  "Calculates service areas and solves routes between shared locations, displays results on the map, and publishes reusable geometry.";
 
-	- **findServiceAreas**: Calculates the area that can be reached when driving or walking on a street network. The calculated area is based on either time or distance to or from one or more facilities or destinations. Here are the coordinates of the facility: {coords}.
-
-		_Example queries:_
-			- "How far can I go by car in 15 minutes from Esri, Redlands, CA?"
-			- "Generate service areas for delivery trucks from our warehouse locations"
-
-		Do NOT ask about output format. Do NOT invent locations or coordinates for facilities if not known. Do NOT attempt to geocode locations without first using the Navigation agent. If you are unaware of an existing location, prompt the user to navigate to the location first.
-	`;
-
-const description = `You are a network analysis assistant that helps users perform geospatial network operations, such as calculating service areas, routes, and geocoding locations.`;
-
-const extractCoords = createAgentMiddleware<any>(
-  "extractCoords",
-  {
-    beforeAgent: (request) => {
-      console.log("Extract Coords Middleware - beforeAgent:", request);
-      const sharedState = request.state.agentExecutionContext?.sharedState as
-        | Record<string, { value?: { location?: { x?: number; y?: number } } }>
-        | undefined;
-      const location = sharedState?.lastResolvedLocation?.value?.location;
-      return {
-        coords: {
-          x: location?.x,
-          y: location?.y,
-        },
-      };
-    },
-  },
-  {
-    outputKey: "coords",
-  },
-);
-
-const networkAnalysisAgent = new LLMAgent({
+export const NetworkAnalysisAgent = new SkillAgent({
+  id: "networkAnalysis",
   name: "Network Analysis",
   description,
-  prompt,
-  middlewares: [extractCoords],
+  skillLoaders,
+  toolLoaders: {
+    findServiceAreas: async () =>
+      (await import("./tools/serviceArea")).findServiceAreasTool,
+    addServiceAreaFeatures: async () =>
+      (
+        await import("./tools/addServiceAreaFeatures")
+      ).addServiceAreaFeaturesTool.getTool(),
+    solveRoute: async () => (await import("./tools/route")).solveRouteTool,
+  },
   modelTier: "fast",
-  tools: agentTools,
+  systemPrompt: "You are an ArcGIS network analysis agent.",
+  instructions:
+    "Use shared resources from earlier agents for spatial inputs and publish reusable geometry through tool artifacts.",
 });
-
-export const NetworkAnalysisAgent = networkAnalysisAgent.registration;

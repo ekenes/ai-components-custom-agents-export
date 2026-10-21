@@ -1,19 +1,28 @@
 import type { ExportScreenshotOptions } from "../../types/types";
+import {
+  appendDirectionsToScreenshot,
+  getRouteDirectionText,
+} from "./directions";
 
 export const exportScreenshot = async (
   options: ExportScreenshotOptions,
-): Promise<string> => {
-  const { mapElement } = options;
+): Promise<{ screenshotUrl: string; thumbnailUrl: string }> => {
+  const { mapElement, filename } = options;
 
   return mapElement
     .takeScreenshot()
-    .then((screenshot) => {
+    .then(async (screenshot) => {
       const dataUrl = screenshot?.dataUrl;
       if (!dataUrl) {
         throw new Error("Screenshot capture completed without an image URL.");
       }
       console.log("Screenshot captured successfully.");
-      return dataUrl;
+      const screenshotUrl = await appendDirectionsToScreenshot(
+        dataUrl,
+        getRouteDirectionText(mapElement),
+        filename,
+      );
+      return { screenshotUrl, thumbnailUrl: dataUrl };
     })
     .catch((error) => {
       console.error("Error capturing screenshot:", error);
