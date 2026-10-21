@@ -1,0 +1,2 @@
+import{a6 as i,a9 as h,eA as o,cf as d,bD as l}from"./index-Bp0lGH6M.js";const c=s=>{let r=s,e=class extends r{initialize(){this.addHandles(o(()=>this.layer,"refresh",t=>{this.doRefresh(t.dataChanged).catch(a=>{d(a)||l.getLogger(this).error(a)})}),"RefreshableLayerView")}};return e=i([h("esri.views.layers.RefreshableLayerView")],e),e};export{c as a};
+//# sourceMappingURL=RefreshableLayerView-DCQg-oGP.js.map
