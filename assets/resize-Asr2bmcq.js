@@ -1,2 +1,0 @@
-import{ad as f,af as n,ae as d,f as u}from"./index-Bp0lGH6M.js";import{o as c}from"./EditUnitIdentifiersResult-BwkE1nxO.js";import"./utils-Bp0HT1W3.js";import"./applyEditsUtils-Bd5j5jhy.js";import"./MeshTransform-Cxxoa_BT.js";import"./quat-DOGJ15ZG.js";import"./quatf64-DO3BzXFi.js";async function O(t,r,a){let o=f(t),i={...r.toJSON(),f:"json"},e=n({...o.query,...i}),p=d(e,{...a,method:"post",authMode:"no-prompt"}),s=`${o.path}/unitIdentifiers/resize`,{data:m}=await u(s,p);return c.fromJSON(m)}export{O as resize};
-//# sourceMappingURL=resize-Asr2bmcq.js.map

@@ -1,0 +1,2 @@
+import{OperatorTouches as n}from"./OperatorTouches-bG518I2B.js";import{n as o,hD as u,hw as c}from"./index-C4Yze8uo.js";const a=new n;function s(e,t,r){return a.execute(e,t,r,null)}function i(e,t){let r=u(e);return s(r.getGeometry(),c(t),r.getSpatialReference())}function p(e,t){return o("json.touchesOperator","execute","touchesExecute"),i(e,t)}export{p as execute,i as touchesExecute};
+//# sourceMappingURL=touchesOperator-giikRYYR.js.map

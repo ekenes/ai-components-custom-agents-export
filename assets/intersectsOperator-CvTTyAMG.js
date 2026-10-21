@@ -1,0 +1,2 @@
+import{r as n}from"./operatorIntersects-iF2Mo55W.js";import{n as o,hD as s,hw as c}from"./index-C4Yze8uo.js";import"./OperatorIntersects-Doaocub4.js";function i(e,t){let r=s(e);return n(r.getGeometry(),c(t),r.getSpatialReference())}function p(e,t){return o("json.intersectsOperator","execute","intersectsExecute"),i(e,t)}export{p as execute,i as intersectsExecute};
+//# sourceMappingURL=intersectsOperator-CvTTyAMG.js.map

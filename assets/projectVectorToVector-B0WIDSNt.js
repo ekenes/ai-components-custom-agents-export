@@ -1,0 +1,2 @@
+import{gF as f,gG as m,S as n}from"./index-C4Yze8uo.js";import{a as s}from"./projectPointToVector-DfJ_sRPO.js";import{e as i}from"./dehydratedPoint-HwkPLSOd.js";function u(r,l,a,o){return l==null||o==null||r.length<2?!1:f(l,o)?m(r,l,0,a,o,0,1):(e.x=r[0],e.y=r[1],e.z=r[2],e.spatialReference=l,s(e,a,o))}const e=i(0,0,0,n.WGS84);export{u as o};
+//# sourceMappingURL=projectVectorToVector-B0WIDSNt.js.map

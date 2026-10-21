@@ -1,0 +1,2 @@
+import{OperatorWithin as r}from"./OperatorWithin-JkL7ZYFo.js";import{n as i,hD as o,hw as a}from"./index-C4Yze8uo.js";const u=new r;function c(e,t,n){return u.execute(e,t,n,null)}function s(e,t){let n=o(e);return c(n.getGeometry(),a(t),n.getSpatialReference())}function p(e,t){return i("json.withinOperator","execute","withinExecute"),s(e,t)}export{p as execute,s as withinExecute};
+//# sourceMappingURL=withinOperator-C54z3zgY.js.map

@@ -1,0 +1,2 @@
+import{aa as f,ac as n,ab as u,f as c}from"./index-C4Yze8uo.js";import{o as d}from"./EditUnitIdentifiersResult-sTce8nMr.js";import"./utils-C_DixQMF.js";import"./applyEditsUtils-BKmDDIu4.js";import"./MeshTransform-ioloUAhQ.js";import"./quat-CQDGRy3I.js";import"./quatf64-aQ5IuZRd.js";async function O(t,r,a){let o=f(t),e={...r.toJSON(),f:"json"},p=n({...o.query,...e}),s=u(p,{...a,method:"post",authMode:"no-prompt"}),i=`${o.path}/unitIdentifiers/reserve`,{data:m}=await c(i,s);return d.fromJSON(m)}export{O as reserve};
+//# sourceMappingURL=reserve-DW-4x1FP.js.map

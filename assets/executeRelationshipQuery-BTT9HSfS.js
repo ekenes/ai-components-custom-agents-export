@@ -1,2 +1,0 @@
-import{jy as i,ad as c,bK as f}from"./index-Bp0lGH6M.js";import{i as m,a as y}from"./queryRelatedRecords-BFkfxV6s.js";async function p(e,t,a){t=i.from(t);let o=c(e);return m(o,t,a).then(r=>{let n=r.data,s={};return Object.keys(n).forEach(u=>s[u]=f.fromJSON(n[u])),s})}async function d(e,t,a){t=i.from(t);let o=c(e);return y(o,t,{...a}).then(r=>r.data)}export{p as executeRelationshipQuery,d as executeRelationshipQueryForCount};
-//# sourceMappingURL=executeRelationshipQuery-BTT9HSfS.js.map

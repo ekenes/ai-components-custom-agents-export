@@ -1,2 +1,0 @@
-import{ad as c,af as f,ae as u,f as n}from"./index-Bp0lGH6M.js";import{o as d}from"./EditCircuitsResult-CBWFkP32.js";import"./utils-Bp0HT1W3.js";import"./applyEditsUtils-Bd5j5jhy.js";import"./MeshTransform-Cxxoa_BT.js";import"./quat-DOGJ15ZG.js";import"./quatf64-DO3BzXFi.js";async function S(o,a,r){let t=c(o),i={...a.toJSON(),f:"json"},p=f({...t.query,...i}),m=u(p,{...r,method:"post",authMode:"no-prompt"}),e=`${t.path}/circuits/create`,{data:s}=await n(e,m);return d.fromJSON(s)}export{S as createCircuit};
-//# sourceMappingURL=createCircuit-D0UR2SJX.js.map
