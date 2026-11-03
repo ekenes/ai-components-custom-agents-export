@@ -140,7 +140,7 @@ export function AssistantPanel({
     [],
   );
   const [slottableRequests, setSlottableRequests] = useState<
-    AssistantSlottableRequestDetail[]
+    ArcgisAssistant["slottableRequests"]
   >([]);
 
   const openScreenshotPreview = async (url: string, title?: string) => {
@@ -469,17 +469,9 @@ export function AssistantPanel({
           entry-message="You must first navigate to a location on the map using the navigation agent before asking about drive times or walking distances."
           suggestedPrompts={initialSuggestedPrompts}
           log-enabled
-          onarcgisSlottableRequest={(event) => {
-            const nextRequest = event.detail;
-            setSlottableRequests((currentRequests: any) => {
-              const remainingRequests = currentRequests.filter(
-                (request: any) => request.slotName !== nextRequest.slotName,
-              );
-              return !nextRequest.data
-                ? remainingRequests
-                : [...remainingRequests, nextRequest];
-            });
-          }}
+          onarcgisSlottableRequest={(event) =>
+            setSlottableRequests(event.currentTarget.slottableRequests)
+          }
           onarcgisReady={scriptPrompts}
         >
           <arcgis-assistant-data-exploration-agent></arcgis-assistant-data-exploration-agent>
